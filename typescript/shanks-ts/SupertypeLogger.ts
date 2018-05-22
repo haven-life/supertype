@@ -21,7 +21,6 @@ class SupertypeLogger {
     context: any;
     granularLevels: any;
     level: any;
-    prettyPrint(level: number, ...data: any[]): string;
 
     // for overriding
     // sendToLog: Function;
