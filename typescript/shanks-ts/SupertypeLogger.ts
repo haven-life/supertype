@@ -21,16 +21,11 @@ class SupertypeLogger {
     context: any;
     granularLevels: any;
     level: any;
-    setLevel(number): void;
-    startContext(context: any): void;
-    setContextProps(context: any): void;
-    clearContextProps(context: any): void;
-    createChildLogger(context: any): SupertypeLogger;
     prettyPrint(level: number, ...data: any[]): string;
 
     // for overriding
-    sendToLog: Function;
-    formatDateTime: Function;
+    // sendToLog: Function;
+    // formatDateTime: Function;
 
     constructor() {
         this.context = {};
@@ -79,7 +74,7 @@ class SupertypeLogger {
             if (ix == 0) {
                 obj.level = arg;
             }
-            else if (ix == 1 && isObject(arg)) {
+            else if (ix == 1 && isObject(arg)) { // error when we try to log an object with property 'level'
                 for (const proper in arg) {
                     obj[proper] = arg[proper];
                 }
@@ -124,6 +119,114 @@ class SupertypeLogger {
 
         return reverse;
     }
+    // Parse log levels such as warn.activity
+    setLevel(level) {
+        var levels = level.split(';');
+
+        for (var ix = 0; ix < levels.length; ++ix) {
+            var levela = levels[ix];
+
+            if (levela.match(/:/)) {
+                if (levels[ix].match(/(.*):(.*)/)) {
+                    this.granularLevels[RegExp.$1] = this.granularLevels[RegExp.$1] || {};
+                    this.granularLevels[RegExp.$1] = RegExp.$2;
+                }
+                else {
+                    this.level = levels[ix];
+                }
+            }
+            else {
+                this.level = levela;
+            }
+        }
+    }
+
+    // Remove any properties recorded by setContext
+    clearContextProps(contextToClear) {
+        for (const prop in contextToClear) {
+            delete this.context[prop];
+        }
+    }
+
+    // Create a new logger and copy over it's context
+    createChildLogger(context): SupertypeLogger {
+        let child: { [key: string]: any } = {};
+
+        for (let prop in this) {
+            child[prop] = this[prop];
+        }
+
+        child.context = context || {};
+
+        for (let proper in this.context) {
+            child.context[proper] = this.context[proper];
+        }
+
+        return child as SupertypeLogger; // bad practice but should fix
+    }
+
+    formatDateTime(date): string {
+        return f(2, (date.getMonth() + 1), '/') + f(2, date.getDate(), '/') + f(4, date.getFullYear(), ' ') +
+            f(2, date.getHours(), ':') + f(2, date.getMinutes(), ':') + f(2, date.getSeconds(), ':') +
+            f(3, date.getMilliseconds()) + ' GMT' + (0 - date.getTimezoneOffset() / 60);
+
+        function f(z, d, s?) {
+            while (String(d).length < z) {
+                d = '0' + d;
+            }
+
+            return d + (s || '');
+        }
+    }
+
+    sendToLog(level, json) {
+        console.log(this.prettyPrint(level, json));     // eslint-disable-line no-console
+    }
+
+    prettyPrint(level, json) {
+        let split = this.split(json, {time: 1, msg: 1, level: 1, name: 1});
+
+        return this.formatDateTime(new Date(json.time)) + ': ' + 
+                                    level.toUpperCase() + ': ' + 
+                                    addColonIfToken(split[1].name, ': ') + 
+                                    addColonIfToken(split[1].msg, ': ') + 
+                                    xy(split[0]);
+
+        function addColonIfToken (token, colonAndSpace) {
+            if (token) {
+                return token + colonAndSpace;
+            }
+
+            return '';
+        }
+
+        function xy(j) {
+            var str = '';
+            var sep = '';
+
+            for (var prop in j) {
+                str += sep + prop + '=' + JSON.stringify(j[prop]);
+                sep = ' ';
+            }
+
+            if (str.length > 0) {
+                return '(' + str + ')';
+            }
+
+            return '';
+        }
+    }
+
+    private split(json, props): any[] {
+        const a = {};
+        const b = {};
+
+        for (const prop in json) {
+            (props[prop] ? b : a)[prop] = json[prop];
+        }
+
+        return [a, b];
+    }
 
     // Logging is enabled if either the level threshold is met or the granular level matches
     private isEnabled(level, obj) {
@@ -142,152 +245,3 @@ class SupertypeLogger {
         }
     }
 }
-
-
-
-
-function createLogger() {
-    return createLogger();
-
-    // Return a new logger object that has our api and a context
-    function createLogger() {
-        const logger = {
-            fatal: function fatal() {
-                this.log(...[60].concat(Array.prototype.slice.call(arguments)));
-            },
-
-            setLevel,
-            sendToLog,
-            formatDateTime,
-            split,
-            clearContextProps,
-            createChildLogger,
-            prettyPrint
-        };
-
-        return logger;
-    }
-
-
-
-    // Parse log levels such as warn.activity
-    function setLevel(level) {
-        const levels = level.split(';');
-
-        for (const levela of levels) {
-            if (levela.match(/:/)) {
-                if (levels[ix].match(/(.*):(.*)/)) {
-                    this.granularLevels[RegExp.$1] = this.granularLevels[RegExp.$1] || {};
-                    this.granularLevels[RegExp.$1] = RegExp.$2;
-                }
-                else {
-                    this.level = levels[ix];
-                }
-            }
-            else {
-                this.level = levela;
-            }
-        }
-    }
-
-    // Logging is enabled if either the level threshold is met or the granular level matches
-    function isEnabled(level, obj) {
-        level = strToLevel[level];
-
-        if (level >= strToLevel[this.level]) {
-            return true;
-        }
-
-        if (this.granularLevels) {
-            for (const levelr in this.granularLevels) {
-                if (obj[levelr] && obj[levelr] == this.granularLevels[levelr]) {
-                    return true;
-                }
-            }
-        }
-    }
-
-
-    // Remove any properties recorded by setContext
-    function clearContextProps(contextToClear) {
-        for (const prop in contextToClear) {
-            delete this.context[prop];
-        }
-    }
-
-    // Create a new logger and copy over it's context
-    function createChildLogger(context) {
-        const child = {};
-
-        for (const prop in this) {
-            child[prop] = this[prop];
-        }
-
-        child.context = context || {};
-
-        for (const proper in this.context) {
-            child.context[proper] = this.context[proper];
-        }
-
-        return child;
-    }
-
-    function formatDateTime(date) {
-        return `${f(2, (date.getMonth() + 1), '/') + f(2, date.getDate(), '/') + f(4, date.getFullYear(), ' ') +
-            f(2, date.getHours(), ':') + f(2, date.getMinutes(), ':') + f(2, date.getSeconds(), ':') +
-            f(3, date.getMilliseconds())} GMT${0 - date.getTimezoneOffset() / 60}`;
-
-        function f(z, d, s) {
-            while (String(d).length < z) {
-                d = `0${d}`;
-            }
-
-            return d + (s || '');
-        }
-    }
-
-    function sendToLog(level, json) {
-        console.log(this.prettyPrint(level, json));     // eslint-disable-line no-console
-    }
-
-    function prettyPrint(level, json) {
-        const split = this.split(json, { time: 1, msg: 1, level: 1, name: 1 });
-
-        return `${this.formatDateTime(new Date(json.time))}: ${level.toUpperCase()}: ${o(split[1].name, ': ')}${o(split[1].msg, ': ')}${xy(split[0])}`;
-
-        function o(s, d) {
-            if (s) {
-                return s + d;
-            }
-
-            return '';
-        }
-
-        function xy(j) {
-            let str = '';
-            let sep = '';
-
-            for (const prop in j) {
-                str += `${sep + prop}=${JSON.stringify(j[prop])}`;
-                sep = ' ';
-            }
-
-            if (str.length > 0) {
-                return `(${str})`;
-            }
-
-            return '';
-        }
-    }
-
-    function split(json, props) {
-        const a = {};
-        const b = {};
-
-        for (const prop in json) {
-            (props[prop] ? b : a)[prop] = json[prop];
-        }
-
-        return [a, b];
-    }
-};
