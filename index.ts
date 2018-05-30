@@ -24,8 +24,14 @@
 
 import {ObjectTemplate} from './ObjectTemplate';
 
-export default ObjectTemplate;
-
 ObjectTemplate.init();
+let x = ObjectTemplate;
+export default x;
+
+let amorphicStatic = ObjectTemplate.amorphicStatic;
+let SupertypeSession = ObjectTemplate.amorphicStatic;
+
+export {amorphicStatic, SupertypeSession};
+export {SupertypeLogger} from './SupertypeLogger';
 export {Supertype} from './Supertype';
 export {supertypeClass, property, remote} from './decorators';

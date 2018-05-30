@@ -17,7 +17,7 @@ type LogObject = {
     activity?: any;
 };
 
-class SupertypeLogger {
+export class SupertypeLogger {
     context: any;
     granularLevels: any;
     level: any;

@@ -8,15 +8,17 @@ import 'reflect-metadata';
     * @param {*} objectProps- optional property for passing params into supertypeclass, if no params, is undefined,
     *                      first param of this function defaults to objectTemplate instead
     * @param {*} objectTemplate 
+    * 
+    * @TODO: fix return types
     */
-export function supertypeClass(objectProps, objectTemplate) {
+export function supertypeClass(objectProps?, objectTemplate?): any {
 
     // When used as @supertypeClass({bla bla bla}), the decorator is first called as it is
     // is being passed into the decorator processor and so it needs to return a function
     // so that it will be called again when the decorators are actually processed.  Kinda spliffy.
 
     // Called by decorator processor
-    if (objectProps.prototype) {
+    if (objectProps.prototype) { // if objectProps is the class (second pass if passed with {toClient style params} or first pass when @supertypeClass no paren and args)
         return decorator(objectProps);
     }
 
@@ -143,7 +145,7 @@ export function supertypeClass(objectProps, objectTemplate) {
 }
 
 
-export function property(props) {
+export function property(props?): any {
     return function (target, targetKey) {
         props = props || {};
         props.enumerable = true;

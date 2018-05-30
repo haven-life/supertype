@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var ObjectTemplate = require('../index.js');
+var ObjectTemplate = require('../index.js').default;
 
 var Base = ObjectTemplate.create("Base", {
     myVar: {type: String, value:  'Base'},

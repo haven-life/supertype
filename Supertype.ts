@@ -6,6 +6,9 @@ function constructorName(constructor) {
     return namedFunction ? namedFunction[1] : null;
 }
 
+type Constructable = new (...args: any[]) => {};
+
+
 /**
  * This is the base class for typescript classes.  It must
  * It will inject members into the object from both the template and objectTemplate
@@ -15,9 +18,50 @@ function constructorName(constructor) {
 
 export class Supertype {
     __template__: any;
-    amorphic: any;
+    amorphic : typeof ObjectTemplate;
 
-    constructor(objectTemplate = ObjectTemplate, callerContext) {
+    // Class members (static)
+    static amorphicCreateProperty(prop: String, defineProperty: Object) {
+        // Implemented in the decorator @supertypeClass
+    }
+
+    static amorphicGetProperties(includeVirtualProperties?: boolean):any {
+        // Implemented in the decorator @supertypeClass
+    }
+
+    static amorphicProperties: any;
+    static amorphicChildClasses: Array<Constructable>;
+    static amorphicParentClass: Constructable;
+    static amorphicFromJSON(json: string) {
+        // Implemented in the decorator @supertypeClass
+    }
+    static amorphicClassName : string;
+    static amorphicStatic : typeof ObjectTemplate;
+
+    // Object members
+    __id__: String;
+    amorphicLeaveEmpty: boolean;
+
+    // Deprecated legacy naming
+    static createProperty(prop: String, defineProperty: Object) {
+        // Implemented in the decorator @supertypeClass
+    }
+    static getProperties() {
+        // Implemented in the decorator @supertypeClass
+    }
+    static __children__: Array<Constructable>;
+    static __parent__: Constructable;
+    amorphicClass : any
+    amorphicGetClassName () : string {
+        // Implemented in the decorator @supertypeClass
+        return '';
+    }
+    static fromJSON (json: string, idPrefix?: string) {
+        // Implemented in the decorator @supertypeClass
+
+    }
+
+    constructor(objectTemplate = ObjectTemplate, callerContext?) {
         var template = callerContext.__template__;
         if (!template) {
             throw new Error(constructorName(Object.getPrototypeOf(this).constructor) + ' missing @supertypeClass');
@@ -98,5 +142,3 @@ export class Supertype {
         return this.amorphicToJSON(cb)
     }
 }
-
-var y = new Supertype(undefined, {});

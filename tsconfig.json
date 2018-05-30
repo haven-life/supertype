@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "umd",
+    "moduleResolution": "node",
     "target": "es5",
+    "lib": ["es2015", "es2017", "dom"],
     "noImplicitAny": false,
     "sourceMap": true,
     "typeRoots": [
       "../node_modules/@types"
     ],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata":true
-  }
+    "emitDecoratorMetadata": true
+  },
+  "exclude": [
+    "./typescript",
+    "./test/typescript"
+  ]
 }

@@ -1,4 +1,5 @@
 import * as serializer from './serializer';
+import { SupertypeLogger } from './SupertypeLogger';
 type CreateTypeForName = {
     name?: string;
     toClient?: boolean;
@@ -638,7 +639,7 @@ export class ObjectTemplate {
      *
      * @private
      */
-    static setupFunction(_propertyName, propertyValue) {
+    static _setupFunction(_propertyName, propertyValue) {
         return propertyValue;
     };
 
@@ -970,9 +971,9 @@ export class ObjectTemplate {
 
         template.isObjectTemplate = true;
 
-        template.extend = (p1, p2) => objectTemplate.extend.call(objectTemplate, this, p1, p2);
-        template.mixin = (p1, p2) => objectTemplate.mixin.call(objectTemplate, this, p1, p2);
-        template.staticMixin = (p1, p2) => objectTemplate.staticMixin.call(objectTemplate, this, p1, p2);
+        template.extend = (p1, p2) => objectTemplate.extend.call(objectTemplate, template, p1, p2);
+        template.mixin = (p1, p2) => objectTemplate.mixin.call(objectTemplate, template, p1, p2);
+        template.staticMixin = (p1, p2) => objectTemplate.staticMixin.call(objectTemplate, template, p1, p2);
 
         template.fromPOJO = (pojo) => {
             objectTemplate.createIfNeeded(template);
