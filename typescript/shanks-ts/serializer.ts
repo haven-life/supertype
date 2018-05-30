@@ -48,7 +48,7 @@ function propXfer(prop, pojo, obj) {
 /**
  * ObjectTemplate.fromPOJO
  */
-export function fromPOJO(pojo, template, defineProperty, idMap, idQualifier, parent, prop, creator) {
+export function fromPOJO(pojo, template, defineProperty?, idMap?, idQualifier?, parent?, prop?, creator?) {
     function getId(id) {
         if (typeof (idQualifier) !== 'undefined') {
             return id + '-' + idQualifier;
