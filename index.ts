@@ -25,8 +25,7 @@
 import {ObjectTemplate} from './ObjectTemplate';
 
 ObjectTemplate.init();
-let x = ObjectTemplate;
-export default x;
+export default ObjectTemplate;
 
 let amorphicStatic = ObjectTemplate.amorphicStatic;
 let SupertypeSession = ObjectTemplate.amorphicStatic;

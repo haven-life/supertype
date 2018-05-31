@@ -28,4 +28,3 @@ export class LionContainer extends AnimalContainer {
     @property({getType:() => Lion})
     containee: Lion;
 }
-

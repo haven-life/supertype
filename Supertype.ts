@@ -20,7 +20,6 @@ export class Supertype {
     __template__: any;
     amorphic : typeof ObjectTemplate;
 
-    // Class members (static)
     static amorphicCreateProperty(prop: String, defineProperty: Object) {
         // Implemented in the decorator @supertypeClass
     }
@@ -28,30 +27,15 @@ export class Supertype {
     static amorphicGetProperties(includeVirtualProperties?: boolean):any {
         // Implemented in the decorator @supertypeClass
     }
-
-    static amorphicProperties: any;
-    static amorphicChildClasses: Array<Constructable>;
-    static amorphicParentClass: Constructable;
     static amorphicFromJSON(json: string) {
         // Implemented in the decorator @supertypeClass
     }
-    static amorphicClassName : string;
-    static amorphicStatic : typeof ObjectTemplate;
-
-    // Object members
-    __id__: String;
-    amorphicLeaveEmpty: boolean;
-
-    // Deprecated legacy naming
     static createProperty(prop: String, defineProperty: Object) {
         // Implemented in the decorator @supertypeClass
     }
     static getProperties() {
         // Implemented in the decorator @supertypeClass
     }
-    static __children__: Array<Constructable>;
-    static __parent__: Constructable;
-    amorphicClass : any
     amorphicGetClassName () : string {
         // Implemented in the decorator @supertypeClass
         return '';
@@ -60,15 +44,29 @@ export class Supertype {
         // Implemented in the decorator @supertypeClass
 
     }
+    static amorphicProperties: any;
+    static amorphicChildClasses: Array<Constructable>;
+    static amorphicParentClass: Constructable;
+    static amorphicClassName : string;
+    static amorphicStatic : typeof ObjectTemplate;
 
-    constructor(objectTemplate = ObjectTemplate, callerContext?) {
-        var template = callerContext.__template__;
+    // Object members
+    __id__: String;
+    amorphicLeaveEmpty: boolean;
+
+    // Deprecated legacy naming
+    static __children__: Array<Constructable>;
+    static __parent__: Constructable;
+    amorphicClass : any
+
+    constructor(objectTemplate = ObjectTemplate) {
+        var template = this.__template__;
         if (!template) {
             throw new Error(constructorName(Object.getPrototypeOf(this).constructor) + ' missing @supertypeClass');
         }
 
         // Tell constructor not to execute as this is an empty object
-        callerContext.amorphicLeaveEmpty = objectTemplate._stashObject(this, template);
+        this.amorphicLeaveEmpty = objectTemplate._stashObject(this, template);
 
         // Template level injections that the application may use
         var targetTemplate = template;
@@ -84,10 +82,9 @@ export class Supertype {
             objectTemplate.__injections__[j].call(this, this);
         }
 
-        callerContext.amorphic = objectTemplate;
+        this.amorphic = objectTemplate;
 
-        Object.assign(this, callerContext);
-        //@TODO: fill the properties of 'this' in
+        //@TODO: fill the properties of 'this' in? do I need this after deleting the callerContext approach
         return this;
     }
     amorphicToJSON(cb){
