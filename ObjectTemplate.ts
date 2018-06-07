@@ -1032,13 +1032,13 @@ export class ObjectTemplate {
      * @returns {F}
      * @private
      */
-    static _createObject() {
-        function F() {}
-        F.prototype = this;
-        const newF =  new F();
-        newF.init();
-        return newF;
+    static _createObject(): HijackedPrototype {
+        HijackedPrototype._setPrototype(this);
+        const newFoo = new HijackedPrototype();
+        newFoo.init();
+        return newFoo;
     }
+
     /**
     * Purpose unknown
     * @param {unknown} originally took a context that it threw away
@@ -1316,4 +1316,12 @@ function bindParams(templateName, objectTemplate, functionProperties,
     let returnVal = <Function>template;
 
     return returnVal as ConstructorType;
+}
+
+
+class HijackedPrototype {
+    init(): any {}; // Overridden in _createObject
+    static _setPrototype(proto: typeof ObjectTemplate) {
+        HijackedPrototype.prototype = proto;
+    }
 }
