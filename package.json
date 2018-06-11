@@ -21,7 +21,7 @@
     },
     "scripts": {
         "lint": "eslint .",
-        "test": "istanbul cover _mocha -- test/* -R spec",
+        "test": "mocha test/*",
         "test:config": "mocha test/config",
         "test:example": "mocha test/example",
         "test:typescript": "mocha --compilers ts:ts-node/register test/typescript/animals.ts",
