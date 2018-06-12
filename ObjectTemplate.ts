@@ -1027,14 +1027,29 @@ export class ObjectTemplate {
         return template;
     };
 
+    // /**
+    //  * A function to clone the Type System
+    //  * @returns {HijackedPrototype}
+    //  * @private
+    //  */
+    // static _createObject(): HijackedPrototype {
+    //     HijackedPrototype._setPrototype(this);
+    //     const newFoo = new HijackedPrototype();
+    //     newFoo.init();
+    //     return newFoo;
+    // }
+
+
     /**
      * A function to clone the Type System
-     * @returns {F}
+     * @returns {o}
      * @private
      */
-    static _createObject(): HijackedPrototype {
-        HijackedPrototype._setPrototype(this);
-        const newFoo = new HijackedPrototype();
+    static _createObject() {
+        const newFoo = Object.create(this);
+
+        // HijackedPrototype._setPrototype(this);
+        // const newFoo = new HijackedPrototype();
         newFoo.init();
         return newFoo;
     }
@@ -1047,7 +1062,6 @@ export class ObjectTemplate {
     static createLogger(): SupertypeLogger {
         return new SupertypeLogger();
     }
-
     
 
 }
@@ -1319,7 +1333,7 @@ function bindParams(templateName, objectTemplate, functionProperties,
 }
 
 
-class HijackedPrototype {
+export class HijackedPrototype {
     init(): any {}; // Overridden in _createObject
     static _setPrototype(proto: typeof ObjectTemplate) {
         HijackedPrototype.prototype = proto;
