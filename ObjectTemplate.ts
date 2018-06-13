@@ -37,6 +37,8 @@ type ConstructorType = Function & {
     __injections__: any;
 }
 
+type ObjectTemplateClone = typeof ObjectTemplate;
+
 
 /**
  * Allow the property to be either a boolean a function that returns a boolean or a string
@@ -1027,29 +1029,14 @@ export class ObjectTemplate {
         return template;
     };
 
-    // /**
-    //  * A function to clone the Type System
-    //  * @returns {HijackedPrototype}
-    //  * @private
-    //  */
-    // static _createObject(): HijackedPrototype {
-    //     HijackedPrototype._setPrototype(this);
-    //     const newFoo = new HijackedPrototype();
-    //     newFoo.init();
-    //     return newFoo;
-    // }
-
 
     /**
      * A function to clone the Type System
      * @returns {o}
      * @private
      */
-    static _createObject() {
+    static _createObject(): ObjectTemplateClone {
         const newFoo = Object.create(this);
-
-        // HijackedPrototype._setPrototype(this);
-        // const newFoo = new HijackedPrototype();
         newFoo.init();
         return newFoo;
     }
@@ -1330,12 +1317,4 @@ function bindParams(templateName, objectTemplate, functionProperties,
     let returnVal = <Function>template;
 
     return returnVal as ConstructorType;
-}
-
-
-export class HijackedPrototype {
-    init(): any {}; // Overridden in _createObject
-    static _setPrototype(proto: typeof ObjectTemplate) {
-        HijackedPrototype.prototype = proto;
-    }
 }

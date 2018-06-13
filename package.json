@@ -28,7 +28,7 @@
         "test:config": "mocha test/config",
         "test:example": "mocha test/example",
         "test:typescript": "mocha --compilers ts:ts-node/register,tsx:ts-node/register test/typescript/*",
-        "compile": "tsc"
+        "compile": "./node_modules/typescript/bin/tsc"
     },
     "directories": {},
     "engines": {
