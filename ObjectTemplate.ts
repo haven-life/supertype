@@ -13,8 +13,10 @@ type Getter = {
 
 /**
  * this is pretty much the class (the template itself)
+ * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
  */
 type ConstructorType = Function & {
+    amorphicClassName: any;
     __shadowParent__: any;
     props?: any;
     __parent__: any;
