@@ -42,8 +42,13 @@ export class Supertype {
     }
     static fromJSON (json: string, idPrefix?: string) {
         // Implemented in the decorator @supertypeClass
-
+    
     }
+
+    static inject (injector: any) {
+        // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
+    }
+
     static amorphicProperties: any;
     static amorphicChildClasses: Array<Constructable>;
     static amorphicParentClass: Constructable;
