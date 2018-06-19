@@ -10,7 +10,7 @@
  *
  * @returns {unknown}
  */
-export function toJSONString(obj, cb) {
+export function toJSONString(obj, cb?) {
     var idMap = [];
 
     try {

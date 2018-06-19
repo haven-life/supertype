@@ -87,7 +87,7 @@ export class Supertype {
         //@TODO: fill the properties of 'this' in? do I need this after deleting the callerContext approach
         return this;
     }
-    amorphicToJSON(cb){
+    amorphicToJSON(cb?){
         return serializer.toJSONString(this, cb);
     } 
 
@@ -135,7 +135,7 @@ export class Supertype {
     __descriptions__(prop){
         return this.amorphicGetPropertyDescriptions(prop);
     }
-    toJSONString(cb) {
+    toJSONString(cb?) {
         return this.amorphicToJSON(cb)
     }
 }
