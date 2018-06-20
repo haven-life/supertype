@@ -5,13 +5,18 @@
     "target": "es5",
     "lib": ["es2015", "es2017", "dom"],
     "noImplicitAny": false,
-    "sourceMap": true,
     "typeRoots": [
       "../node_modules/@types"
     ],
+    "declaration": true,
+    "declarationDir": ".",
+    "outDir": "./dist",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "inlineSources": true,
+    "inlineSourceMap": true
   },
+  "declaration": true,
   "exclude": [
     "./typescript",
     "./test/typescript"

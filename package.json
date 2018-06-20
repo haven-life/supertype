@@ -3,6 +3,8 @@
     "description": "A type system for classical inheritence, mix-ins and composition.",
     "homepage": "https://github.com/selsamman/supertype",
     "version": "3.0.0",
+    "main": "index.js",
+    "types": "index.d.ts",
     "dependencies": {
         "@types/reflect-metadata": "^0.1.0",
         "reflect-metadata": "^0.1.12"
