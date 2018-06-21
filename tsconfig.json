@@ -9,7 +9,7 @@
       "../node_modules/@types"
     ],
     "declaration": true,
-    "declarationDir": ".",
+    "declarationDir": "dist",
     "outDir": "./dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
