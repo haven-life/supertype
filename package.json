@@ -4,7 +4,7 @@
     "homepage": "https://github.com/selsamman/supertype",
     "version": "3.0.0",
     "main": "dist/index.js",
-    "types": "types/index.d.ts",
+    "types": "dist/index.d.ts",
     "dependencies": {
         "@types/reflect-metadata": "^0.1.0",
         "reflect-metadata": "^0.1.12"
