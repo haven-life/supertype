@@ -31,7 +31,8 @@
         "test:example": "mocha test/example",
         "test:typescript": "mocha --compilers ts:ts-node/register,tsx:ts-node/register test/typescript/*",
         "clean": "rm -rf dist/ && rm -rf types/ && rm -rf node_modules/",
-        "compile": "./node_modules/typescript/bin/tsc"
+        "compile": "./node_modules/typescript/bin/tsc",
+        "cleanDist": "rm -rf dist/"
     },
     "directories": {},
     "engines": {
