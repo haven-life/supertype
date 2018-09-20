@@ -13,7 +13,7 @@ export declare type Getter = {
  * this is pretty much the class (the template itself)
  * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
  */
-export declare type ConstructorType = Function & {
+export declare type ConstructorTypeBase = Function & {
     amorphicClassName: any;
     __shadowParent__: any;
     props?: any;
@@ -27,7 +27,7 @@ export declare type ConstructorType = Function & {
     mixin: any;
     fromPOJO: any;
     fromJSON: any;
-    getProperties: (includeVirtual) => any;
+    getProperties: (includeVirtual: any) => any;
     prototype: any;
     defineProperties: any;
     objectProperties: any;
@@ -36,6 +36,8 @@ export declare type ConstructorType = Function & {
     __template__: any;
     __injections__: any;
 };
+export interface ConstructorType extends ConstructorTypeBase {
+}
 export declare type ObjectTemplateClone = typeof ObjectTemplate;
 /**
  * the og ObjectTemplate, what everything picks off of
@@ -328,7 +330,7 @@ export declare class ObjectTemplate {
      *
      * @private
      */
-    private static _createTemplate(mixinTemplate?, parentTemplate?, propertiesOrTemplate?, createProperties?, templateName?, createTemplateNow?);
+    private static _createTemplate;
     /**
      * A function to clone the Type System
      * @returns {o}

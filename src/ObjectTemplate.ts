@@ -15,7 +15,7 @@ export type Getter = {
  * this is pretty much the class (the template itself)
  * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
  */
-export type ConstructorType = Function & {
+export type ConstructorTypeBase = Function & {
     amorphicClassName: any;
     __shadowParent__: any;
     props?: any;
@@ -38,6 +38,8 @@ export type ConstructorType = Function & {
     __template__: any;
     __injections__: any;
 }
+
+export interface ConstructorType extends ConstructorTypeBase {}
 
 export type ObjectTemplateClone = typeof ObjectTemplate;
 

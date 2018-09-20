@@ -4,8 +4,6 @@
     "moduleResolution": "node",
     "target": "es5",
     "lib": ["es2015", "es2017", "dom"],
-    "rootDir": "./",
-    "baseUrl": ".",
     "noImplicitAny": false,
     "typeRoots": [
       "../node_modules/@types"

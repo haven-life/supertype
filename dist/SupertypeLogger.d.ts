@@ -18,6 +18,6 @@ export declare class SupertypeLogger {
     formatDateTime(date: any): string;
     sendToLog(level: any, json: any): void;
     prettyPrint(level: any, json: any): string;
-    private split(json, props);
-    private isEnabled(level, obj);
+    private split;
+    private isEnabled;
 }

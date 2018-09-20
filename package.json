@@ -6,6 +6,7 @@
     "types": "dist/index.d.ts",
     "homepage": "https://github.com/haven-life/supertype",
     "dependencies": {
+        "@types/reflect-metadata": "^0.1.0",
         "reflect-metadata": "^0.1.12"
     },
     "devDependencies": {
@@ -27,7 +28,7 @@
         "debugTSTests": "mocha --inspect-brk test/typescript/*.js",
         "test:typescript": "mocha --compilers ts:ts-node/register,tsx:ts-node/register test/typescript/*",
         "clean": "rm -rf dist/ && rm -rf types/ && rm -rf node_modules/",
-        "compile": "./node_modules/typescript/bin/tsc",
+        "compile": "tsc",
         "cleanDist": "rm -rf dist/",
         "test": "mocha test/**/*.js dist/test/**/*.js",
         "test:config": "mocha test/config",
