@@ -58,6 +58,7 @@ export declare class ObjectTemplate {
     static __anonymousId__: number;
     static __templatesToInject__: {};
     static logger: any;
+    logger: SupertypeLogger;
     static __templateUsage__: any;
     static __injections__: Function[];
     static __toClient__: boolean;
