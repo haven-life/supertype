@@ -39,7 +39,9 @@ export type ConstructorTypeBase = Function & {
     __injections__: any;
 }
 
-export interface ConstructorType extends ConstructorTypeBase {}
+export interface ConstructorType extends ConstructorTypeBase {
+    new();
+}
 
 export type ObjectTemplateClone = typeof ObjectTemplate;
 
