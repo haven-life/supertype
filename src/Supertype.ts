@@ -90,6 +90,7 @@ export class Supertype {
         this.amorphic = objectTemplate;
 
         //@TODO: fill the properties of 'this' in? do I need this after deleting the callerContext approach
+        // https://github.com/haven-life/supertype/issues/7
         return this;
     }
     amorphicToJSON(cb?){

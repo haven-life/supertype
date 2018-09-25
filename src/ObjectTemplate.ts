@@ -1224,7 +1224,6 @@ function bindParams(templateName, objectTemplate, functionProperties,
                 Object.defineProperties(this, prunedDefineProperties); // This method will be added pre-EMCA 5
             }
         } catch (e) {
-            // TODO: find a better way to deal with errors that are thrown
             console.log(e); // eslint-disable-line no-console
         }
 

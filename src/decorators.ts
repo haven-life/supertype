@@ -10,6 +10,7 @@ import 'reflect-metadata';
     * @param {*} objectTemplate 
     * 
     * @TODO: fix return types
+    * https://github.com/haven-life/supertype/issues/6
     */
 export function supertypeClass(objectProps?, objectTemplate?): any {
 
@@ -134,13 +135,6 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
             getDictionary();
             return target.__shadowChildren__;
         }
-
-        /*
-        TODO: Typescript
-        Looking at the supertype constructor these need to be dealt with
-        - createProperties used by client.js to add Persistor, Get and Fetch
-        - injections
-        */
     }
 }
 
