@@ -10,7 +10,7 @@ export type Constructable = new (...args: any[]) => {};
 
 
 /**
- * This is the base class for typescript classes.  It must
+ * This is the base class for typescript classes. 
  * It will inject members into the object from both the template and objectTemplate
  * @param {ObjectTemplate} - other layers can pass in their own object template (this is the object not ObjectTemplate)
  * @returns {Object} the object itself
