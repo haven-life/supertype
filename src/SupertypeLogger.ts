@@ -9,8 +9,10 @@ function isObject(obj) {
         && !(obj instanceof Error);
 }
 
+type LoggerFunction = (level: string, data: any, ...rawData) => void;
+
 type LogObject = {
-    level: string;
+    level: string | number;
     time: string;
     msg: string;
     module?: any;
@@ -55,8 +57,16 @@ export class SupertypeLogger {
         this.log(10, ...data);
     }
 
+    /**
+     * assign a custom send to log functionality.
+     * @param {(level: string, data: any) => void} loggerFunction
+     */
+    setLogger(loggerFunction: LoggerFunction) {
+        this.sendToLog = loggerFunction;
+    }
+
     // Log all arguments assuming the first one is level and the second one might be an object (similar to banyan)
-    log(level: number, ...data: any[]): void {
+    private log(level: number, ...data: any[]): void {
         let msg = '';
         const obj: LogObject = {
             time: (new Date()).toISOString(),
@@ -68,12 +78,10 @@ export class SupertypeLogger {
             obj[prop] = this.context[prop];
         }
 
-        for (let ix = 0; ix < arguments.length; ++ix) {
-            const arg = arguments[ix];
-            if (ix == 0) {
-                obj.level = arg;
-            }
-            else if (ix == 1 && isObject(arg)) { // error when we try to log an object with property 'level'
+        obj.level = level;
+
+        data.forEach((arg, index) => {
+            if (index === 0 && isObject(arg)) {
                 for (const proper in arg) {
                     obj[proper] = arg[proper];
                 }
@@ -81,7 +89,7 @@ export class SupertypeLogger {
             else {
                 msg += `${arg} `;
             }
-        }
+        });
 
         if (obj.msg.length) {
             obj.msg += ' ';
@@ -99,7 +107,7 @@ export class SupertypeLogger {
         }
 
         if (this.isEnabled(levelToStr[obj.level], obj)) {
-            this.sendToLog(levelToStr[obj.level], obj);
+            this.sendToLog(levelToStr[obj.level], obj, ...data);
         }
     }
 
@@ -178,7 +186,7 @@ export class SupertypeLogger {
         }
     }
 
-    sendToLog(level, json) {
+    sendToLog(level, json, ...rawData) {
         console.log(this.prettyPrint(level, json));     // eslint-disable-line no-console
     }
 
