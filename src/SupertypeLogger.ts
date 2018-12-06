@@ -9,7 +9,7 @@ function isObject(obj) {
         && !(obj instanceof Error);
 }
 
-type LoggerFunction = (level: string, data: any, ...rawData) => void;
+type LoggerFunction = (logLevel: string, logObject: any, ...rawLogData) => void;
 
 type LogObject = {
     level: string | number;
@@ -186,8 +186,15 @@ export class SupertypeLogger {
         }
     }
 
-    sendToLog(level, json, ...rawData) {
-        console.log(this.prettyPrint(level, json));     // eslint-disable-line no-console
+    /**
+     * this function is designed to be replaced by the consumer of this class.
+     *
+     * @param logLevel - log level
+     * @param logObject - formatted log object, passed in from consumer
+     * @param rawLogData - unformatted and unprocessed version of "logObject" param
+     */
+    private sendToLog(logLevel, logObject, ...rawLogData) {
+        console.log(this.prettyPrint(logLevel, logObject));     // eslint-disable-line no-console
     }
 
     prettyPrint(level, json) {
