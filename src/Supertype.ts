@@ -1,10 +1,6 @@
 import {ObjectTemplate} from './ObjectTemplate';
+import { UtilityFunctions } from './UtilityFunctions';
 import * as serializer from './serializer';
-
-function constructorName(constructor) {
-    var namedFunction = constructor.toString().match(/function ([^(]*)/);
-    return namedFunction ? namedFunction[1] : null;
-}
 
 export type Constructable = new (...args: any[]) => {};
 
@@ -67,7 +63,7 @@ export class Supertype {
     constructor(objectTemplate = ObjectTemplate) {
         var template = this.__template__;
         if (!template) {
-            throw new Error(constructorName(Object.getPrototypeOf(this).constructor) + ' missing @supertypeClass');
+            throw new Error(UtilityFunctions.constructorName(Object.getPrototypeOf(this).constructor) + ' missing @supertypeClass');
         }
 
         // Tell constructor not to execute as this is an empty object

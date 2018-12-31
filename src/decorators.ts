@@ -2,6 +2,7 @@ export { Supertype } from './Supertype';
 import { ObjectTemplate } from './ObjectTemplate';
 
 import 'reflect-metadata';
+import { UtilityFunctions } from './UtilityFunctions';
 
 /**
     * 
@@ -37,7 +38,7 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         target.isObjectTemplate = true;
         target.__injections__ = [];
         target.__objectTemplate__ = objectTemplate;
-        var createProps = objectTemplate.getTemplateProperties(props || {});
+        var createProps = UtilityFunctions.getTemplateProperties(props || {}, objectTemplate);
         target.__toClient__ = createProps.__toClient__;
         target.__toServer__ = createProps.__toServer__;
         target.__shadowChildren__ = [];
