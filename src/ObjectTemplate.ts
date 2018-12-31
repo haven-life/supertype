@@ -1,5 +1,6 @@
 import * as serializer from './serializer';
 import { SupertypeLogger } from './SupertypeLogger';
+import { UtilityFunctions } from './UtilityFunctions';
 export type CreateTypeForName = {
     name?: string;
     toClient?: boolean;
@@ -15,7 +16,7 @@ export type Getter = {
  * this is pretty much the class (the template itself)
  * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
  */
-export type ConstructorTypeBase = Function & {
+export type SupertypeConstructor = Function & {
     amorphicClassName: any;
     __shadowParent__: any;
     props?: any;
@@ -39,64 +40,12 @@ export type ConstructorTypeBase = Function & {
     __injections__: any;
 }
 
-export interface ConstructorType extends ConstructorTypeBase {
+export interface SupertypeInterface extends SupertypeConstructor {
     new();
 }
 
 export type ObjectTemplateClone = typeof ObjectTemplate;
 
-
-/**
- * Allow the property to be either a boolean a function that returns a boolean or a string
- * matched against a rule set array of string in ObjectTemplate
- *
- * @param  prop unknown
- * @param ruleSet unknown
- *
- * @returns {function(this:ObjectTemplate)}
- */
-function processProp(prop, ruleSet) {
-    var ret = null;
-
-    if (typeof (prop) === 'function') {
-        ret = prop.call(ObjectTemplate);
-    }
-    else if (typeof (prop) === 'string') {
-        ret = false;
-
-        if (ruleSet) {
-            ruleSet.map(function i(rule) {
-                // this will always execute
-                if (!ret) {
-                    // double equals or single equals?
-                    ret = rule == prop;
-                }
-            });
-        }
-    }
-    else if (prop instanceof Array) {
-        prop.forEach(function h(prop) {
-            ret = ret || processProp(prop, ruleSet);
-        });
-    }
-    else {
-        ret = prop;
-    }
-
-    return ret;
-}
-
-function pruneExisting(obj, props) {
-    var newProps = {};
-
-    for (var prop in props) {
-        if (typeof(obj[prop]) === 'undefined') {
-            newProps[prop] = props[prop];
-        }
-    }
-
-    return newProps;
-}
 
 /**
  * the og ObjectTemplate, what everything picks off of
@@ -108,12 +57,12 @@ export class ObjectTemplate {
     static nextId: any; // for stashObject
     static __exceptions__: any;
 
-    static __templates__: ConstructorType[];
+    static __templates__: SupertypeInterface[];
     static toServerRuleSet: string[];
     static toClientRuleSet: string[];
 
     static templateInterceptor: any;
-    static __dictionary__: { [key: string]: ConstructorType };
+    static __dictionary__: { [key: string]: SupertypeInterface };
     static __anonymousId__: number;
     static __templatesToInject__: {};
     static logger: any;
@@ -175,31 +124,6 @@ export class ObjectTemplate {
     }
 
     /**
-     * Purpose unknown
-     *
-     * @param {unknown} props unknown
-     *
-     * @returns {unknown}
-     */
-    static getTemplateProperties(props) {
-        let templateProperties: { __toClient__?: any; __toServer__?: any } = {};
-
-        if (ObjectTemplate.__toClient__ == false) {
-            props.toClient = false;
-        }
-
-        if (processProp(props.isLocal, this.isLocalRuleSet)) {
-            props.toServer = false;
-            props.toClient = false;
-        }
-
-        templateProperties.__toClient__ = processProp(props.toClient, this.toClientRuleSet) != false;
-        templateProperties.__toServer__ = processProp(props.toServer, this.toServerRuleSet) != false;
-
-        return templateProperties;
-    }
-
-    /**
         * Create an object template that is instantiated with the new operator.
         * properties is
         *
@@ -233,7 +157,7 @@ export class ObjectTemplate {
             throw new Error('missing template property definitions');
         }
 
-        const createProps = this.getTemplateProperties(props);
+        const createProps = UtilityFunctions.getTemplateProperties(props, this);
 
         if (typeof (this.templateInterceptor) === 'function') {
             this.templateInterceptor('create', name, properties);
@@ -309,7 +233,7 @@ export class ObjectTemplate {
         }
 
         if (props) {
-            createProps = this.getTemplateProperties(props);
+            createProps = UtilityFunctions.getTemplateProperties(props, this);
         }
 
         if (typeof (this.templateInterceptor) === 'function') {
@@ -648,7 +572,7 @@ export class ObjectTemplate {
      *
      * @private
      */
-    static _setupFunction(_propertyName, propertyValue) {
+    static _setupFunction(_propertyName, propertyValue, ...args) {
         return propertyValue;
     };
 
@@ -971,7 +895,7 @@ export class ObjectTemplate {
         /**
          * Constructor that will be returned will only ever be created once
          */
-        var template: ConstructorType = this.__dictionary__[templateName] ||
+        var template: SupertypeInterface = this.__dictionary__[templateName] ||
             bindParams(templateName, objectTemplate, functionProperties,
                 defineProperties, parentTemplate, propertiesOrTemplate,
                 createProperties, objectProperties, templatePrototype,
@@ -1200,7 +1124,7 @@ function bindParams(templateName, objectTemplate, functionProperties,
 
     function template() {
         objectTemplate.createIfNeeded(template, this);
-        let templateRef: ConstructorType = <ConstructorType><Function>template;
+        let templateRef: SupertypeInterface = <SupertypeInterface><Function>template;
 
         objectTemplate.__templateUsage__[templateRef.__name__] = true;
         var parent = templateRef.__parent__;
@@ -1215,8 +1139,8 @@ function bindParams(templateName, objectTemplate, functionProperties,
             this.__transient__ = true;
         }
 
-        var prunedObjectProperties = pruneExisting(this, templateRef.objectProperties);
-        var prunedDefineProperties = pruneExisting(this, templateRef.defineProperties);
+        var prunedObjectProperties = UtilityFunctions.pruneExisting(this, templateRef.objectProperties);
+        var prunedDefineProperties = UtilityFunctions.pruneExisting(this, templateRef.defineProperties);
 
         try {
             // Create properties either with EMCA 5 defineProperties or by hand
@@ -1322,5 +1246,5 @@ function bindParams(templateName, objectTemplate, functionProperties,
 
     let returnVal = <Function>template;
 
-    return returnVal as ConstructorType;
+    return returnVal as SupertypeInterface;
 }

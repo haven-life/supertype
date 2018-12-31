@@ -2,6 +2,7 @@ export { Supertype } from './Supertype';
 import { ObjectTemplate } from './ObjectTemplate';
 
 import 'reflect-metadata';
+import { UtilityFunctions } from './UtilityFunctions';
 
 /**
     * 
@@ -31,16 +32,15 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
     function decorator(target) {
         objectTemplate = objectTemplate || ObjectTemplate;
 
-        target.prototype.__template__ = target;
-        target.prototype.amorphicClass = target;
-        target.prototype.amorphicGetClassName = function () { return target.__name__ };
-        target.isObjectTemplate = true;
-        target.__injections__ = [];
-        target.__objectTemplate__ = objectTemplate;
-        var createProps = objectTemplate.getTemplateProperties(props || {});
+        // target.prototype.__template__ = target;
+        // target.prototype.amorphicClass = target;
+        // target.prototype.amorphicGetClassName = function () { return target.__name__ };
+        // target.isObjectTemplate = true;
+        // target.__injections__ = [];
+        // target.__objectTemplate__ = objectTemplate;
+        var createProps = UtilityFunctions.getTemplateProperties(props || {}, objectTemplate);
         target.__toClient__ = createProps.__toClient__;
         target.__toServer__ = createProps.__toServer__;
-        target.__shadowChildren__ = [];
 
         // Push an array of template references (we can't get at their names now).  Later we will
         // use this to construct __dictionary__
@@ -62,50 +62,50 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         Object.defineProperty(target, 'amorphicChildClasses', { get: getChildren });
         Object.defineProperty(target, 'amorphicStatic', { get: function () { return objectTemplate } });
 
-        target.fromPOJO = function fromPOJO(pojo) {
-            return objectTemplate.fromPOJO(pojo, target);
-        };
+        // target.fromPOJO = function fromPOJO(pojo) {
+        //     return objectTemplate.fromPOJO(pojo, target);
+        // };
 
-        target.fromJSON = // Legacy
-            target.amorphicFromJSON = function fromJSON(str, idPrefix) {
-                return objectTemplate.fromJSON(str, target, idPrefix);
-            };
+        // target.fromJSON = // Legacy
+        //     target.amorphicFromJSON = function fromJSON(str, idPrefix) {
+        //         return objectTemplate.fromJSON(str, target, idPrefix);
+        //     };
 
-        target.getProperties = // Legacy
-            target.amorphicGetProperties = function getProperties(includeVirtual) {
-                return objectTemplate._getDefineProperties(target, undefined, includeVirtual);
-            };
+        // target.getProperties = // Legacy
+        //     target.amorphicGetProperties = function getProperties(includeVirtual) {
+        //         return objectTemplate._getDefineProperties(target, undefined, includeVirtual);
+        //     };
 
-        target.createProperty = // Legacy
-            target.amorphicCreateProperty = function (propertyName, defineProperty) {
-                if (defineProperty.body) {
-                    target.prototype[propertyName] = objectTemplate._setupFunction(propertyName, defineProperty.body,
-                        defineProperty.on, defineProperty.validate);
-                }
-                else {
-                    target.prototype.__amorphicprops__[propertyName] = defineProperty;
-                    if (typeof defineProperty.value in ['string', 'number'] || defineProperty.value == null) {
-                        Object.defineProperty(target.prototype, propertyName,
-                            { enumerable: true, writable: true, value: defineProperty.value });
-                    }
-                    else {
-                        Object.defineProperty(target.prototype, propertyName, {
-                            enumerable: true,
-                            get: function () {
-                                if (!this['__' + propertyName]) {
-                                    this['__' + propertyName] =
-                                        ObjectTemplate.clone(defineProperty.value, defineProperty.of ||
-                                            defineProperty.type || null);
-                                }
-                                return this['__' + propertyName];
-                            },
-                            set: function (value) {
-                                this['__' + propertyName] = value;
-                            }
-                        });
-                    }
-                }
-            };
+        // target.createProperty = // Legacy
+        //     target.amorphicCreateProperty = function (propertyName, defineProperty) {
+        //         if (defineProperty.body) {
+        //             target.prototype[propertyName] = objectTemplate._setupFunction(propertyName, defineProperty.body,
+        //                 defineProperty.on, defineProperty.validate);
+        //         }
+        //         else {
+        //             target.prototype.__amorphicprops__[propertyName] = defineProperty;
+        //             if (typeof defineProperty.value in ['string', 'number'] || defineProperty.value == null) {
+        //                 Object.defineProperty(target.prototype, propertyName,
+        //                     { enumerable: true, writable: true, value: defineProperty.value });
+        //             }
+        //             else {
+        //                 Object.defineProperty(target.prototype, propertyName, {
+        //                     enumerable: true,
+        //                     get: function () {
+        //                         if (!this['__' + propertyName]) {
+        //                             this['__' + propertyName] =
+        //                                 ObjectTemplate.clone(defineProperty.value, defineProperty.of ||
+        //                                     defineProperty.type || null);
+        //                         }
+        //                         return this['__' + propertyName];
+        //                     },
+        //                     set: function (value) {
+        //                         this['__' + propertyName] = value;
+        //                     }
+        //                 });
+        //             }
+        //         }
+        //     };
 
         if (target.prototype.__exceptions__) {
             objectTemplate.__exceptions__ = objectTemplate.__exceptions__ || [];
