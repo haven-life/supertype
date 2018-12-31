@@ -3,7 +3,7 @@ import { UtilityFunctions } from './UtilityFunctions';
 import * as serializer from './serializer';
 
 export type Constructable = new (...args: any[]) => {};
-
+type DefinePropertyType = { type: any, of: any, body: any, on: any, validate: any, value: any };
 
 /**
  * This is the base class for typescript classes. 
@@ -13,9 +13,47 @@ export type Constructable = new (...args: any[]) => {};
  */
 
 export class Supertype {
-    __template__: any;
-    amorphic : typeof ObjectTemplate;
+    /**
+     * The constructor, or the class definition itself.
+     * @type {typeof Supertype}
+     * @memberof Supertype
+     */
+    __template__: typeof Supertype;
 
+    /**
+    * The constructor, or the class definition itself.
+    * @type {typeof Supertype}
+    * @memberof Supertype
+    */
+    amorphicClass: typeof Supertype;
+
+    amorphic: typeof ObjectTemplate;
+    __name__: string;
+    static __injections__: Array<Function> = [];
+    static isObjectTemplate = true;
+    static amorphicProperties: any;
+    static amorphicChildClasses: Array<Constructable>;
+    static amorphicParentClass: Constructable;
+    static amorphicClassName: string;
+    static amorphicStatic: typeof ObjectTemplate;
+    static __objectTemplate__ = ObjectTemplate;
+
+    /**
+     * @TODO: Doublecheck this true/true setup
+     */
+    static __toClient__ = true;
+    static __toServer__ = true;
+    static __shadowChildren__ = [];
+
+    // Object members
+    __id__: string;
+    amorphicLeaveEmpty: boolean;
+
+    // Deprecated legacy naming
+    static __children__: Array<Supertype>;
+    static __parent__: typeof Supertype;
+    __amorphicprops__: any;
+    __exceptions__: any;
     static amorphicCreateProperty(prop: String, defineProperty: Object) {
         // Implemented in the decorator @supertypeClass
     }
@@ -44,22 +82,6 @@ export class Supertype {
     static inject (injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
     }
-
-    static amorphicProperties: any;
-    static amorphicChildClasses: Array<Constructable>;
-    static amorphicParentClass: Constructable;
-    static amorphicClassName : string;
-    static amorphicStatic : typeof ObjectTemplate;
-
-    // Object members
-    __id__: String;
-    amorphicLeaveEmpty: boolean;
-
-    // Deprecated legacy naming
-    static __children__: Array<Constructable>;
-    static __parent__: Constructable;
-    amorphicClass : any
-
     constructor(objectTemplate = ObjectTemplate) {
         var template = this.__template__;
         if (!template) {
