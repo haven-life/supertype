@@ -83,7 +83,7 @@ export class Supertype {
     }
 
     static amorphicGetProperties(includeVirtualProperties?: boolean): any {
-        // Implemented in the decorator @supertypeClass
+        return ObjectTemplate._getDefineProperties(this, undefined, includeVirtualProperties);
     }
     static amorphicFromJSON(json: string, idPrefix) {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
@@ -124,9 +124,6 @@ export class Supertype {
             }
         }
     }
-    static getProperties() {
-        // Implemented in the decorator @supertypeClass
-    }
     amorphicGetClassName(): string {
         // Implemented in the decorator @supertypeClass
         return '';
@@ -144,9 +141,20 @@ export class Supertype {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
 
+    /**
+     * Legacy method 
+     *
+     * @static
+     * @memberof Supertype
+     */
+    static getProperties(includeVirtualProperties?: boolean) {
+        return ObjectTemplate._getDefineProperties(this, undefined, includeVirtualProperties);
+    }
+
     static fromPOJO(pojo) {
         return ObjectTemplate.fromPOJO(pojo, this);
     }
+
 
     static inject(injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)

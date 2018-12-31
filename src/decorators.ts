@@ -72,6 +72,10 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         //         return objectTemplate.fromJSON(str, target, idPrefix);
         //     };
 
+        // target.getProperties = // Legacy
+        //     target.amorphicGetProperties = function getProperties(includeVirtual) {
+        //         return objectTemplate._getDefineProperties(target, undefined, includeVirtual);
+        //     };
 
         // target.createProperty = // Legacy
         //     target.amorphicCreateProperty = function (propertyName, defineProperty) {
@@ -103,11 +107,6 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         //             }
         //         }
         //     };
-        target.getProperties = // Legacy
-            target.amorphicGetProperties = function getProperties(includeVirtual) {
-                return objectTemplate._getDefineProperties(target, undefined, includeVirtual);
-            };
-
 
         if (target.prototype.__exceptions__) {
             objectTemplate.__exceptions__ = objectTemplate.__exceptions__ || [];
