@@ -106,6 +106,19 @@ export class Supertype {
         }
 
         this.amorphic = objectTemplate;
+        this.__template__ = this.constructor as typeof Supertype;
+        this.amorphicClass = this.constructor as typeof Supertype;
+
+        if (this.__exceptions__) {
+            objectTemplate.__exceptions__ = objectTemplate.__exceptions__ || [];
+            for (var exceptionKey in this.__exceptions__) {
+                objectTemplate.__exceptions__.push({
+                    func: this.__exceptions__[exceptionKey],
+                    class: UtilityFunctions.getName,
+                    prop: exceptionKey
+                });
+            }
+        }
 
         //@TODO: fill the properties of 'this' in? do I need this after deleting the callerContext approach
         // https://github.com/haven-life/supertype/issues/7

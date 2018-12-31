@@ -32,6 +32,8 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
     function decorator(target) {
         objectTemplate = objectTemplate || ObjectTemplate;
 
+        // target.prototype.__template__ = target;
+        // target.prototype.amorphicClass = target;
         target.prototype.__template__ = target;
         target.prototype.amorphicClass = target;
         target.prototype.amorphicGetClassName = function () { return target.__name__ };
