@@ -28,7 +28,7 @@
         "test:ts": "mocha --compilers ts:ts-node/register,tsx:ts-node/register test/typescript/*",
         "clean": "rm -rf dist/",
         "compile": "tsc",
-        "test": "mocha test/**/*.js dist/test/**/*.js",
+        "test": "mocha test/**/*.js",
         "test:config": "mocha test/config",
         "test:example": "mocha test/example",
         "prepublishOnly": "npm run clean && npm run compile"
