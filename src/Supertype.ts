@@ -1,9 +1,9 @@
 import {ObjectTemplate} from './ObjectTemplate';
-import { UtilityFunctions } from './UtilityFunctions';
 import * as serializer from './serializer';
+import { UtilityFunctions } from './UtilityFunctions';
 
-export type Constructable = new (...args: any[]) => {};
 type DefinePropertyType = { type: any, of: any, body: any, on: any, validate: any, value: any };
+export type Constructable = new (...args: any[]) => {};
 
 /**
  * This is the base class for typescript classes. 
@@ -59,11 +59,12 @@ export class Supertype {
     }
 
     static amorphicGetProperties(includeVirtualProperties?: boolean):any {
-        // Implemented in the decorator @supertypeClass
+                // Implemented in the decorator @supertypeClass
     }
-    static amorphicFromJSON(json: string) {
-        // Implemented in the decorator @supertypeClass
+    static amorphicFromJSON(json: string, idPrefix) {
+        return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
+
     static createProperty(prop: String, defineProperty: Object) {
         // Implemented in the decorator @supertypeClass
     }
@@ -74,9 +75,21 @@ export class Supertype {
         // Implemented in the decorator @supertypeClass
         return '';
     }
-    static fromJSON (json: string, idPrefix?: string) {
-        // Implemented in the decorator @supertypeClass
     
+    /**
+     * Legacy 
+     *
+     * @static
+     * @param {string} json
+     * @param {string} [idPrefix]
+     * @memberof Supertype
+     */
+    static fromJSON (json: string, idPrefix?: string) {
+        return ObjectTemplate.fromJSON(json, this, idPrefix);
+    }
+    
+    static fromPOJO(pojo) {
+        return ObjectTemplate.fromPOJO(pojo, this);
     }
 
     static inject (injector: any) {

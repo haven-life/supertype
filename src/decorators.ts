@@ -65,14 +65,15 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         Object.defineProperty(target, 'amorphicChildClasses', { get: getChildren });
         Object.defineProperty(target, 'amorphicStatic', { get: function () { return objectTemplate } });
 
-        target.fromPOJO = function fromPOJO(pojo) {
-            return objectTemplate.fromPOJO(pojo, target);
-        };
+        // target.fromPOJO = function fromPOJO(pojo) {
+        //     return objectTemplate.fromPOJO(pojo, target);
+        // };
 
-        target.fromJSON = // Legacy
-            target.amorphicFromJSON = function fromJSON(str, idPrefix) {
-                return objectTemplate.fromJSON(str, target, idPrefix);
-            };
+        // target.fromJSON = // Legacy
+        //     target.amorphicFromJSON = function fromJSON(str, idPrefix) {
+        //         return objectTemplate.fromJSON(str, target, idPrefix);
+        //     };
+
 
         target.getProperties = // Legacy
             target.amorphicGetProperties = function getProperties(includeVirtual) {
