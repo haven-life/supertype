@@ -1,4 +1,4 @@
-import {ObjectTemplate} from './ObjectTemplate';
+import { ObjectTemplate } from './ObjectTemplate';
 import * as serializer from './serializer';
 import { UtilityFunctions } from './UtilityFunctions';
 
@@ -54,28 +54,84 @@ export class Supertype {
     static __parent__: typeof Supertype;
     __amorphicprops__: any;
     __exceptions__: any;
-    static amorphicCreateProperty(prop: String, defineProperty: Object) {
-        // Implemented in the decorator @supertypeClass
+    static amorphicCreateProperty(prop: string, defineProperty: DefinePropertyType) {
+        if (defineProperty.body) {
+            this.prototype[prop] = ObjectTemplate._setupFunction(prop, defineProperty.body, defineProperty.on, defineProperty.validate);
+        }
+        else {
+            this.prototype.__amorphicprops__[prop] = defineProperty;
+            if (typeof defineProperty.value in ['string', 'number'] || defineProperty.value == null) {
+                Object.defineProperty(this.prototype, prop, { enumerable: true, writable: true, value: defineProperty.value });
+            }
+            else {
+                Object.defineProperty(this.prototype, prop,
+                    {
+                        enumerable: true,
+                        get: () => {
+                            if (!this['__' + prop]) {
+                                this['__' + prop] =
+                                    ObjectTemplate.clone(defineProperty.value, defineProperty.of || defineProperty.type || null);
+                            }
+                            return this['__' + prop];
+                        },
+                        set: (value) => {
+                            this['__' + prop] = value;
+                        }
+                    });
+            }
+        }
     }
 
-    static amorphicGetProperties(includeVirtualProperties?: boolean):any {
-                // Implemented in the decorator @supertypeClass
+    static amorphicGetProperties(includeVirtualProperties?: boolean): any {
+        // Implemented in the decorator @supertypeClass
     }
     static amorphicFromJSON(json: string, idPrefix) {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
 
-    static createProperty(prop: String, defineProperty: Object) {
-        // Implemented in the decorator @supertypeClass
+    /**
+     * Legacy 
+     *
+     * @static
+     * @param {string} prop
+     * @param {Object} defineProperty
+     * @memberof Supertype
+     */
+    static createProperty(prop: string, defineProperty: DefinePropertyType) {
+        if (defineProperty.body) {
+            this.prototype[prop] = ObjectTemplate._setupFunction(prop, defineProperty.body, defineProperty.on, defineProperty.validate);
+        }
+        else {
+            this.prototype.__amorphicprops__[prop] = defineProperty;
+            if (typeof defineProperty.value in ['string', 'number'] || defineProperty.value == null) {
+                Object.defineProperty(this.prototype, prop, { enumerable: true, writable: true, value: defineProperty.value });
+            }
+            else {
+                Object.defineProperty(this.prototype, prop,
+                    {
+                        enumerable: true,
+                        get: () => {
+                            if (!this['__' + prop]) {
+                                this['__' + prop] =
+                                    ObjectTemplate.clone(defineProperty.value, defineProperty.of || defineProperty.type || null);
+                            }
+                            return this['__' + prop];
+                        },
+                        set: (value) => {
+                            this['__' + prop] = value;
+                        }
+                    });
+            }
+        }
     }
     static getProperties() {
         // Implemented in the decorator @supertypeClass
     }
-    amorphicGetClassName () : string {
+    amorphicGetClassName(): string {
         // Implemented in the decorator @supertypeClass
         return '';
     }
-    
+
     /**
      * Legacy 
      *
@@ -84,15 +140,15 @@ export class Supertype {
      * @param {string} [idPrefix]
      * @memberof Supertype
      */
-    static fromJSON (json: string, idPrefix?: string) {
+    static fromJSON(json: string, idPrefix?: string) {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
-    
+
     static fromPOJO(pojo) {
         return ObjectTemplate.fromPOJO(pojo, this);
     }
 
-    static inject (injector: any) {
+    static inject(injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
     }
     constructor(objectTemplate = ObjectTemplate) {
@@ -137,28 +193,28 @@ export class Supertype {
         // https://github.com/haven-life/supertype/issues/7
         return this;
     }
-    amorphicToJSON(cb?){
+    amorphicToJSON(cb?) {
         return serializer.toJSONString(this, cb);
-    } 
+    }
 
     amorphicGetPropertyDefinition(prop) {
         return ObjectTemplate._getDefineProperty(prop, this.__template__);
     }
     amorphicGetPropertyValues(prop) {
         var defineProperty = this.__prop__(prop) || this.__prop__('_' + prop);
-    
-        if (typeof(defineProperty.values) === 'function') {
+
+        if (typeof (defineProperty.values) === 'function') {
             return defineProperty.values.call(this);
         }
         return defineProperty.values;
     }
     amorphicGetPropertyDescriptions(prop) {
         var defineProperty = this.__prop__(prop) || this.__prop__('_' + prop);
-    
-        if (typeof(defineProperty.descriptions) === 'function') {
+
+        if (typeof (defineProperty.descriptions) === 'function') {
             return defineProperty.descriptions.call(this);
         }
-    
+
         return defineProperty.descriptions;
     }
 
@@ -182,7 +238,7 @@ export class Supertype {
     __values__(prop) {
         return this.amorphicGetPropertyValues(prop);
     }
-    __descriptions__(prop){
+    __descriptions__(prop) {
         return this.amorphicGetPropertyDescriptions(prop);
     }
     toJSONString(cb?) {
