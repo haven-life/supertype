@@ -1,6 +1,7 @@
 import * as serializer from './serializer';
 import { SupertypeLogger } from './SupertypeLogger';
 import { UtilityFunctions } from './UtilityFunctions';
+import { Supertype, SupertypeConstructor } from './Supertype';
 export type CreateTypeForName = {
     name?: string;
     toClient?: boolean;
@@ -12,37 +13,10 @@ export type Getter = {
     get: any;
 }
 
-/**
- * this is pretty much the class (the template itself)
- * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
- */
-export type SupertypeConstructor = Function & {
-    amorphicClassName: any;
-    __shadowParent__: any;
-    props?: any;
-    __parent__: any;
-    __name__: any;
-    __createParameters__: any;
-    functionProperties: any;
-    isObjectTemplate: any;
-    extend: any;
-    staticMixin: any;
-    mixin: any;
-    fromPOJO: any;
-    fromJSON: any;
-    getProperties: (includeVirtual) => any;
-    prototype: any;
-    defineProperties: any;
-    objectProperties: any;
-    parentTemplate: any;
-    createProperty: any;
-    __template__: any;
-    __injections__: any;
-}
-
-export interface SupertypeInterface extends SupertypeConstructor {
-    new();
-}
+// /**
+//  * this is pretty much the class (the template itself)
+//  * Try to unify this with the Supertype Type (maybe make this a partial, have supertype extend this)
+//  */
 
 export type ObjectTemplateClone = typeof ObjectTemplate;
 
@@ -57,12 +31,12 @@ export class ObjectTemplate {
     static nextId: any; // for stashObject
     static __exceptions__: any;
 
-    static __templates__: SupertypeInterface[];
+    static __templates__: SupertypeConstructor[];
     static toServerRuleSet: string[];
     static toClientRuleSet: string[];
 
     static templateInterceptor: any;
-    static __dictionary__: { [key: string]: SupertypeInterface };
+    static __dictionary__: { [key: string]: SupertypeConstructor };
     static __anonymousId__: number;
     static __templatesToInject__: {};
     static logger: any;
@@ -101,7 +75,7 @@ export class ObjectTemplate {
         this.logger = this.createLogger(); // Create a default logger
     }
 
-    static getTemplateByName(name) {
+    static getTemplateByName(name): SupertypeConstructor {
         return this.getClasses()[name];
     }
 
@@ -337,7 +311,7 @@ export class ObjectTemplate {
         }
     }
 
-    static getClasses() {
+    static getClasses(): { [key: string]: SupertypeConstructor } {
         if (this.__templates__) {
             for (let ix = 0; ix < this.__templates__.length; ++ix) {
                 var template = this.__templates__[ix];
@@ -894,8 +868,9 @@ export class ObjectTemplate {
         }
         /**
          * Constructor that will be returned will only ever be created once
+         * removing the typing (this is javascript anyway)
          */
-        var template: SupertypeInterface = this.__dictionary__[templateName] ||
+        var template: any = this.__dictionary__[templateName] ||
             bindParams(templateName, objectTemplate, functionProperties,
                 defineProperties, parentTemplate, propertiesOrTemplate,
                 createProperties, objectProperties, templatePrototype,
@@ -957,7 +932,7 @@ export class ObjectTemplate {
             template.props[propd] = propst[propd];
         }
 
-        return template;
+        return template as SupertypeConstructor;
     };
 
 
@@ -1124,7 +1099,7 @@ function bindParams(templateName, objectTemplate, functionProperties,
 
     function template() {
         objectTemplate.createIfNeeded(template, this);
-        let templateRef: SupertypeInterface = <SupertypeInterface><Function>template;
+        let templateRef: SupertypeConstructor = <SupertypeConstructor><Function>template;
 
         objectTemplate.__templateUsage__[templateRef.__name__] = true;
         var parent = templateRef.__parent__;
@@ -1246,5 +1221,5 @@ function bindParams(templateName, objectTemplate, functionProperties,
 
     let returnVal = <Function>template;
 
-    return returnVal as SupertypeInterface;
+    return returnVal as SupertypeConstructor;
 }

@@ -2,6 +2,8 @@ import { ObjectTemplate } from './ObjectTemplate';
 import * as serializer from './serializer';
 import { UtilityFunctions } from './UtilityFunctions';
 
+export type SupertypeConstructor = typeof Supertype;
+
 type DefinePropertyType = { isLocal?: any, toClient?: any, toServer?: any, type?: any, of?: any, body?: any, on?: any, validate?: any, value?: any };
 
 export type Constructable = new (...args: any[]) => {};
@@ -17,21 +19,14 @@ export class Supertype {
 
     static __injections__: Array<Function> = [];
     static isObjectTemplate = true;
-    static amorphicProperties: any;
-    static amorphicChildClasses: Array<Constructable>;
-    static amorphicParentClass: Constructable;
-    // static amorphicClassName: string;
-    static amorphicStatic: typeof ObjectTemplate;
     static __objectTemplate__ = ObjectTemplate;
     /**
-     * @TODO: Doublecheck this true/true setup
+     * @TODO: Doublecheck this false/false setup may cause problems
      */
-    static __toClient__ = true;
-    static __toServer__ = true;
+    static __toClient__ = false;
+    static __toServer__ = false;
     static __shadowChildren__ = [];
     // Deprecated legacy naming
-    static __children__: Array<Supertype>;
-    static __parent__: typeof Supertype;
 
     static amorphicCreateProperty(prop: string, defineProperty: DefinePropertyType) {
         if (defineProperty.body) {
@@ -65,13 +60,23 @@ export class Supertype {
         return UtilityFunctions.getName(this);
     }
 
+    static get amorphicChildClasses(): Array<SupertypeConstructor> {
+        return UtilityFunctions.getChildren(this, this.__objectTemplate__);
+    }
+
+    static get amorphicParentClass(): SupertypeConstructor {
+        return UtilityFunctions.getParent(this, this.__objectTemplate__);
+    }
+
     static amorphicGetProperties(includeVirtualProperties?: boolean): any {
         return ObjectTemplate._getDefineProperties(this, undefined, includeVirtualProperties);
     }
-    static amorphicFromJSON(json: string, idPrefix?) {
-        return ObjectTemplate.fromJSON(json, this, idPrefix);
+    static get amorphicProperties() {
+        return UtilityFunctions.defineProperties(this);
     }
-
+    static get amorphicStatic(): typeof ObjectTemplate {
+        return this.__objectTemplate__;
+    }
     /**
      * Legacy 
      *
@@ -81,6 +86,7 @@ export class Supertype {
      * @memberof Supertype
      */
     static createProperty(prop: string, defineProperty: DefinePropertyType) {
+        console.log(`Create property prop is ${prop} type is ${typeof prop}`);
         if (defineProperty.body) {
             this.prototype[prop] = ObjectTemplate._setupFunction(prop, defineProperty.body, defineProperty.on, defineProperty.validate);
         }
@@ -107,8 +113,16 @@ export class Supertype {
             }
         }
     }
-    static get __name__(): string {
-        return UtilityFunctions.getName(this);
+    static amorphicFromJSON(json: string, idPrefix?) {
+        return ObjectTemplate.fromJSON(json, this, idPrefix);
+    }
+
+    static get __children__(): Array<SupertypeConstructor> {
+        return UtilityFunctions.getChildren(this, this.__objectTemplate__);
+    }
+
+    static get defineProperties() {
+        return UtilityFunctions.defineProperties(this);
     }
 
     /**
@@ -123,6 +137,10 @@ export class Supertype {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
 
+    static fromPOJO(pojo) {
+        return ObjectTemplate.fromPOJO(pojo, this);
+    }
+
     /**
      * Legacy method 
      *
@@ -133,13 +151,21 @@ export class Supertype {
         return ObjectTemplate._getDefineProperties(this, undefined, includeVirtualProperties);
     }
 
-    static fromPOJO(pojo) {
-        return ObjectTemplate.fromPOJO(pojo, this);
-    }
-
 
     static inject(injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
+    }
+
+    static get __name__(): string {
+        return UtilityFunctions.getName(this);
+    }
+
+    static get parentTemplate() {
+        return UtilityFunctions.getParent(this, this.__objectTemplate__);
+    }
+
+    static get __parent__(): SupertypeConstructor {
+        return UtilityFunctions.getParent(this, this.__objectTemplate__);
     }
 
     /**
@@ -162,6 +188,9 @@ export class Supertype {
     __exceptions__: any;
 
     constructor(objectTemplate = ObjectTemplate) {
+        this.__template__ = this.constructor as typeof Supertype;
+        this.amorphicClass = this.constructor as typeof Supertype;
+
         var template = this.__template__;
         if (!template) {
             throw new Error(UtilityFunctions.constructorName(Object.getPrototypeOf(this).constructor) + ' missing @supertypeClass');
@@ -185,8 +214,6 @@ export class Supertype {
         }
 
         this.amorphic = objectTemplate;
-        this.__template__ = this.constructor as typeof Supertype;
-        this.amorphicClass = this.constructor as typeof Supertype;
 
         if (this.__exceptions__) {
             objectTemplate.__exceptions__ = objectTemplate.__exceptions__ || [];
@@ -288,4 +315,18 @@ export class Supertype {
     toJSONString(cb?) {
         return this.amorphicToJSON(cb)
     }
+
+    /**
+     * Legacy members of Supertype. Don't need to be interacted with. Only used in ObjectTemplate.ts
+     *
+     * @static
+     */
+    static __shadowParent__: any;
+    static props?: any;
+    static __createParameters__: any;
+    static functionProperties: any;
+    static extend: any;
+    static staticMixin: any;
+    static mixin: any;
+    static objectProperties: any;
 }

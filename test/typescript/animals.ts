@@ -42,17 +42,10 @@ describe('Freeze Dried Arks', function () {
     });
     it ('has object property values', function () {
         var ark = new Ark();
-        console.log(`${ark.__template__.constructor}SUP MY DUDE`);
 
         expect(ark.amorphicGetPropertyValues('size').length).to.equal(2);
         expect(ark.amorphicGetPropertyDescriptions('size').s).to.equal('small');
-        console.log(`${ark.__template__.__name__}SUP MY DUDE`);
-        console.log(`${ark.__template__.constructor.name}SUP MY DUDE`);
-        console.log(`${ark.amorphicClass.__name__}SUP MY DUDE`);
-        console.log(`${ark.amorphicClass.constructor.name}SUP MY DUDE`);
-        console.log(`${ark.amorphicClass.amorphicClassName}SUP MY DUDE`);
-        console.log(`${ark.amorphicClass.amorphicClassName.constructor.name}SUP MY DUDE`);
-        console.log(`${ark.amorphicGetClassName()}SUP MY DUDE`);
+
 
         expect(ark.__template__.__name__).to.equal('Ark');
         expect(ark.amorphicClass.__name__).to.equal('Ark');
