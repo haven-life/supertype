@@ -32,9 +32,9 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
     function decorator(target) {
         objectTemplate = objectTemplate || ObjectTemplate;
 
+        // target.prototype.amorphicGetClassName = function () { return target.__name__ };
         target.prototype.__template__ = target;  // necessary?
         target.prototype.amorphicClass = target; // necessary?
-        target.prototype.amorphicGetClassName = function () { return target.__name__ };
         target.isObjectTemplate = true;
         target.__injections__ = [];
         target.__objectTemplate__ = objectTemplate;
@@ -54,8 +54,8 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         // that we can ensure they are fully resolved before accessing them
         Object.defineProperty(target, 'defineProperties', { get: defineProperties });
         Object.defineProperty(target, 'amorphicProperties', { get: defineProperties });
-        Object.defineProperty(target, '__name__', { get: getName });
-        Object.defineProperty(target, 'amorphicClassName', { get: getName });
+        // Object.defineProperty(target, '__name__', { get: getName });
+        // Object.defineProperty(target, 'amorphicClassName', { get: getName });
         Object.defineProperty(target, 'parentTemplate', { get: getParent });
         Object.defineProperty(target, '__parent__', { get: getParent });
         Object.defineProperty(target, '__children__', { get: getChildren });

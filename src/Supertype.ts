@@ -2,7 +2,8 @@ import { ObjectTemplate } from './ObjectTemplate';
 import * as serializer from './serializer';
 import { UtilityFunctions } from './UtilityFunctions';
 
-type DefinePropertyType = { type: any, of: any, body: any, on: any, validate: any, value: any };
+type DefinePropertyType = { isLocal?: any, toClient?: any, toServer?: any, type?: any, of?: any, body?: any, on?: any, validate?: any, value?: any };
+
 export type Constructable = new (...args: any[]) => {};
 
 /**
@@ -13,47 +14,25 @@ export type Constructable = new (...args: any[]) => {};
  */
 
 export class Supertype {
-    /**
-     * The constructor, or the class definition itself.
-     * @type {typeof Supertype}
-     * @memberof Supertype
-     */
-    __template__: typeof Supertype;
 
-    /**
-    * The constructor, or the class definition itself.
-    * @type {typeof Supertype}
-    * @memberof Supertype
-    */
-    amorphicClass: typeof Supertype;
-
-    amorphic: typeof ObjectTemplate;
-    __name__: string;
     static __injections__: Array<Function> = [];
     static isObjectTemplate = true;
     static amorphicProperties: any;
     static amorphicChildClasses: Array<Constructable>;
     static amorphicParentClass: Constructable;
-    static amorphicClassName: string;
+    // static amorphicClassName: string;
     static amorphicStatic: typeof ObjectTemplate;
     static __objectTemplate__ = ObjectTemplate;
-
     /**
      * @TODO: Doublecheck this true/true setup
      */
     static __toClient__ = true;
     static __toServer__ = true;
     static __shadowChildren__ = [];
-
-    // Object members
-    __id__: string;
-    amorphicLeaveEmpty: boolean;
-
     // Deprecated legacy naming
     static __children__: Array<Supertype>;
     static __parent__: typeof Supertype;
-    __amorphicprops__: any;
-    __exceptions__: any;
+
     static amorphicCreateProperty(prop: string, defineProperty: DefinePropertyType) {
         if (defineProperty.body) {
             this.prototype[prop] = ObjectTemplate._setupFunction(prop, defineProperty.body, defineProperty.on, defineProperty.validate);
@@ -82,10 +61,14 @@ export class Supertype {
         }
     }
 
+    static get amorphicClassName(): string {
+        return UtilityFunctions.getName(this);
+    }
+
     static amorphicGetProperties(includeVirtualProperties?: boolean): any {
         return ObjectTemplate._getDefineProperties(this, undefined, includeVirtualProperties);
     }
-    static amorphicFromJSON(json: string, idPrefix) {
+    static amorphicFromJSON(json: string, idPrefix?) {
         return ObjectTemplate.fromJSON(json, this, idPrefix);
     }
 
@@ -124,9 +107,8 @@ export class Supertype {
             }
         }
     }
-    amorphicGetClassName(): string {
-        // Implemented in the decorator @supertypeClass
-        return '';
+    static get __name__(): string {
+        return UtilityFunctions.getName(this);
     }
 
     /**
@@ -159,6 +141,26 @@ export class Supertype {
     static inject(injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
     }
+
+    /**
+    * The constructor, or the class definition itself.
+    * @type {typeof Supertype}
+    * @memberof Supertype
+    */
+    __template__: typeof Supertype;
+    /**
+    * The constructor, or the class definition itself.
+    * @type {typeof Supertype}
+    * @memberof Supertype
+    */
+    amorphicClass: typeof Supertype;
+    amorphic: typeof ObjectTemplate;
+    // Object members
+    __id__: string;
+    amorphicLeaveEmpty: boolean;
+    __amorphicprops__: any;
+    __exceptions__: any;
+
     constructor(objectTemplate = ObjectTemplate) {
         var template = this.__template__;
         if (!template) {
@@ -191,7 +193,7 @@ export class Supertype {
             for (var exceptionKey in this.__exceptions__) {
                 objectTemplate.__exceptions__.push({
                     func: this.__exceptions__[exceptionKey],
-                    class: UtilityFunctions.getName,
+                    class: UtilityFunctions.getName, // @TODO: need to bind target to this DOES THIS EVEN WORK?
                     prop: exceptionKey
                 });
             }
@@ -226,6 +228,10 @@ export class Supertype {
         return defineProperty.descriptions;
     }
 
+    amorphicGetClassName(): string {
+        return this.__template__.__name__;
+    }
+
     createCopy(creator) {
         var obj = this;
         return ObjectTemplate.fromPOJO(obj, obj.__template__, null, null, undefined, null, null, creator);
@@ -240,15 +246,45 @@ export class Supertype {
             this[prop] = obj[prop];
         }
     }
+    /**
+     * Legacy alias of amoprhicPropertyDefinition. Should be protected
+     *
+     * @param {*} prop
+     * @returns
+     * @memberof Supertype
+     */
     __prop__(prop) {
         return this.amorphicGetPropertyDefinition(prop);
     }
+    /**
+     * Legacy alias of amorphicGetPropertyValues. Should be protected
+     *
+     * @param {*} prop
+     * @returns
+     * @memberof Supertype
+     */
     __values__(prop) {
         return this.amorphicGetPropertyValues(prop);
     }
+
+    /**
+     * Legacy alias of amorphicGetPropertyDescriptions. Should be protected
+     *
+     * @param {*} prop
+     * @returns
+     * @memberof Supertype
+     */
     __descriptions__(prop) {
         return this.amorphicGetPropertyDescriptions(prop);
     }
+
+    /**
+     * Legacy alias of amorphicToJSON. Should be protected
+     *
+     * @param {Function} callback
+     * @returns
+     * @memberof Supertype
+     */
     toJSONString(cb?) {
         return this.amorphicToJSON(cb)
     }
