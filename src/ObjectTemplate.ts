@@ -1,7 +1,7 @@
 import * as serializer from './serializer';
 import { SupertypeLogger } from './SupertypeLogger';
 import { UtilityFunctions } from './UtilityFunctions';
-import { Supertype, SupertypeConstructor } from './Supertype';
+import { SupertypeConstructor } from './Supertype';
 export type CreateTypeForName = {
     name?: string;
     toClient?: boolean;
