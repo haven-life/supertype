@@ -35,7 +35,6 @@ export class ObjectTemplate {
     static toServerRuleSet: string[];
     static toClientRuleSet: string[];
 
-    static templateInterceptor: any;
     static __dictionary__: { [key: string]: SupertypeConstructor };
     static __anonymousId__: number;
     static __templatesToInject__: {};
@@ -79,8 +78,8 @@ export class ObjectTemplate {
         return this.getClasses()[name];
     }
 
-    /**
- * Purpose unknown
+/**
+ * Purpose unknown - @JSPATH
  *
  * @param {unknown} template unknown
  * @param {unknown} name unknown
@@ -98,20 +97,22 @@ export class ObjectTemplate {
     }
 
     /**
-        * Create an object template that is instantiated with the new operator.
-        * properties is
-        *
-        * @param {unknown} name the name of the template or an object with
-        *        name - the name of the class
-        *        toClient - whether the object is to be shipped to the client (with semotus)
-        *        toServer - whether the object is to be shipped to the server (with semotus)
-        *        isLocal - equivalent to setting toClient && toServer to false
-        * @param {unknown} properties an object whose properties represent data and function
-        * properties of the object.  The data properties may use the defineProperty
-        * format for properties or may be properties assigned a Number, String or Date.
-        *
-        * @returns {*} the object template
-        */
+    * Create an object template that is instantiated with the new operator.
+    * properties is
+    *
+    * @JSPATH ?? 
+    * 
+    * @param {unknown} name the name of the template or an object with
+    *        name - the name of the class
+    *        toClient - whether the object is to be shipped to the client (with semotus)
+    *        toServer - whether the object is to be shipped to the server (with semotus)
+    *        isLocal - equivalent to setting toClient && toServer to false
+    * @param {unknown} properties an object whose properties represent data and function
+    * properties of the object.  The data properties may use the defineProperty
+    * format for properties or may be properties assigned a Number, String or Date.
+    *
+    * @returns {*} the object template @JSPATH???
+    */
 
     static create(name: string | CreateTypeForName, properties) {
         /** this block only executes on createtypeforname */
@@ -133,10 +134,6 @@ export class ObjectTemplate {
 
         const createProps = UtilityFunctions.getTemplateProperties(props, this);
 
-        if (typeof (this.templateInterceptor) === 'function') {
-            this.templateInterceptor('create', name, properties);
-        }
-
         let template;
 
         if (properties) {
@@ -154,7 +151,7 @@ export class ObjectTemplate {
 
 
     /**
-     * Extend and existing (parent template)
+     * Extend and existing (parent template) -  @JSPATH
      *
      * @param {unknown} parentTemplate unknown
      * @param {unknown} name the name of the template or an object with
@@ -210,10 +207,6 @@ export class ObjectTemplate {
             createProps = UtilityFunctions.getTemplateProperties(props, this);
         }
 
-        if (typeof (this.templateInterceptor) === 'function') {
-            this.templateInterceptor('extend', name, properties);
-        }
-
         let template;
 
         if (properties) {
@@ -238,11 +231,16 @@ export class ObjectTemplate {
         return template;
     }
 
+    /**
+     * @JSPATH ???
+     *
+     * @static
+     * @param {*} template
+     * @param {*} properties
+     * @returns
+     * @memberof ObjectTemplate
+     */
     static mixin(template, properties) {
-        if (typeof (this.templateInterceptor) === 'function') {
-            this.templateInterceptor('create', template.__name__, properties);
-        }
-
         return this._createTemplate(template, null, properties, template, template.__name__);
     }
 
@@ -280,6 +278,8 @@ export class ObjectTemplate {
     /**
      * Create the template if it needs to be created
      * @param [unknown} template to be created
+     * 
+     * @JSPATH ???
      */
     static createIfNeeded(template?, thisObj?) {
         if (template.__createParameters__) {
@@ -774,7 +774,8 @@ export class ObjectTemplate {
     /**
      * 
      * General function to create templates used by create, extend and mixin
-     *
+     * @JSPATH ???
+     * 
      * @param {unknown} mixinTemplate - template used for a mixin
      * @param {unknown} parentTemplate - template used for an extend
      * @param {unknown} propertiesOrTemplate - properties to be added/mxied in
@@ -1092,6 +1093,7 @@ function createPropertyFunc(functionProperties, templatePrototype, objectTemplat
     }
 };
 
+/** @JSPATH  */
 function bindParams(templateName, objectTemplate, functionProperties,
     defineProperties, parentTemplate, propertiesOrTemplate,
     createProperties, objectProperties, templatePrototype,

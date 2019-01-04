@@ -42,7 +42,6 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
         objectTemplate.__templates__ = objectTemplate.__templates__ || [];
         objectTemplate.__templates__.push(target);
 
-
         // We can never reference template functions at compile time which is when this decorator is executed
         // Therefore we have to setup getters for properties that need access to the template functions so
         // that we can ensure they are fully resolved before accessing them
