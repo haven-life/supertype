@@ -86,7 +86,6 @@ export class Supertype {
      * @memberof Supertype
      */
     static createProperty(prop: string, defineProperty: DefinePropertyType) {
-        console.log(`Create property prop is ${prop} type is ${typeof prop}`);
         if (defineProperty.body) {
             this.prototype[prop] = ObjectTemplate._setupFunction(prop, defineProperty.body, defineProperty.on, defineProperty.validate);
         }
