@@ -701,7 +701,7 @@ export class ObjectTemplate {
       * @returns {*}
       * @private
       */
-     static _createEmptyObject(template, objId, defineProperty) {
+     static _createEmptyObject(template, objId, defineProperty, ...args) {
         template = this._resolveSubClass(template, objId, defineProperty);
 
         const oldStashObject = this._stashObject;

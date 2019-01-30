@@ -33,5 +33,5 @@ let SupertypeSession = ObjectTemplate.amorphicStatic;
 
 export {amorphicStatic, SupertypeSession};
 export {SupertypeLogger} from './SupertypeLogger';
-export {Supertype} from './Supertype';
+export {Supertype, SupertypeConstructor} from './Supertype';
 export {supertypeClass, property, remote} from './decorators';

@@ -269,7 +269,7 @@ export declare class ObjectTemplate {
  * @returns {*}
  * @private
  */
-    static _createEmptyObject(template: any, objId: any, defineProperty: any): any;
+    static _createEmptyObject(template: any, objId: any, defineProperty: any, ...args: any[]): any;
     /**
      * Looks up a property in the defineProperties saved with the template cascading
      * up the prototype chain to find it
