@@ -1,6 +1,6 @@
 import { ObjectTemplate } from './ObjectTemplate';
 export declare type SupertypeConstructor = typeof Supertype;
-declare type DefinePropertyType = {
+export declare type DefinePropertyType = {
     isLocal?: any;
     toClient?: any;
     toServer?: any;
@@ -140,4 +140,3 @@ export declare class Supertype {
     static mixin: any;
     static objectProperties: any;
 }
-export {};
