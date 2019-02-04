@@ -4,7 +4,7 @@ import { UtilityFunctions } from './UtilityFunctions';
 
 export type SupertypeConstructor = typeof Supertype;
 
-type DefinePropertyType = { isLocal?: any, toClient?: any, toServer?: any, type?: any, of?: any, body?: any, on?: any, validate?: any, value?: any };
+export type DefinePropertyType = { isLocal?: any, toClient?: any, toServer?: any, type?: any, of?: any, body?: any, on?: any, validate?: any, value?: any };
 
 export type Constructable = new (...args: any[]) => {};
 
