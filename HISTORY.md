@@ -1,3 +1,5 @@
+## 3.1.1
+* Updating logger override to apply to the prototype method.
 ## 3.1.0
 * Adding a public api to allow customization of supertype's logging functionality.
 ## 3.0.0

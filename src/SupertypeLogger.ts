@@ -63,6 +63,7 @@ export class SupertypeLogger {
      */
     setLogger(loggerFunction: LoggerFunction) {
         this.sendToLog = loggerFunction;
+        SupertypeLogger.prototype.sendToLog = loggerFunction;
     }
 
     // Log all arguments assuming the first one is level and the second one might be an object (similar to banyan)
@@ -200,10 +201,10 @@ export class SupertypeLogger {
     prettyPrint(level, json) {
         let split = this.split(json, {time: 1, msg: 1, level: 1, name: 1});
 
-        return this.formatDateTime(new Date(json.time)) + ': ' + 
-                                    level.toUpperCase() + ': ' + 
-                                    addColonIfToken(split[1].name, ': ') + 
-                                    addColonIfToken(split[1].msg, ': ') + 
+        return this.formatDateTime(new Date(json.time)) + ': ' +
+                                    level.toUpperCase() + ': ' +
+                                    addColonIfToken(split[1].name, ': ') +
+                                    addColonIfToken(split[1].msg, ': ') +
                                     xy(split[0]);
 
         function addColonIfToken (token, colonAndSpace) {
