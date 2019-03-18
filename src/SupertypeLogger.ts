@@ -1,5 +1,6 @@
 const levelToStr = { 60: 'fatal', 50: 'error', 40: 'warn', 30: 'info', 20: 'debug', 10: 'trace' };
 const strToLevel = { 'fatal': 60, 'error': 50, 'warn': 40, 'info': 30, 'debug': 20, 'trace': 10 };
+const AMORPHIC_CONTEXT = 'amorphicContext';
 
 function isObject(obj) {
     return obj != null
@@ -74,8 +75,11 @@ export class SupertypeLogger {
             level: 'info', //default info
         };
 
+        const amorphicContext = {};
+        // Copy amorphic context into the data
         for (const prop in this.context) {
             obj[prop] = this.context[prop];
+            amorphicContext[prop] = this.context[prop];
         }
 
         obj.level = level;
@@ -85,6 +89,8 @@ export class SupertypeLogger {
                 for (const proper in arg) {
                     obj[proper] = arg[proper];
                 }
+
+                arg[AMORPHIC_CONTEXT] = amorphicContext;
             }
             else {
                 msg += `${arg} `;
@@ -201,10 +207,10 @@ export class SupertypeLogger {
         let split = this.split(json, {time: 1, msg: 1, level: 1, name: 1});
 
         return this.formatDateTime(new Date(json.time)) + ': ' +
-                                    level.toUpperCase() + ': ' +
-                                    addColonIfToken(split[1].name, ': ') +
-                                    addColonIfToken(split[1].msg, ': ') +
-                                    xy(split[0]);
+            level.toUpperCase() + ': ' +
+            addColonIfToken(split[1].name, ': ') +
+            addColonIfToken(split[1].msg, ': ') +
+            xy(split[0]);
 
         function addColonIfToken (token, colonAndSpace) {
             if (token) {
