@@ -1,6 +1,5 @@
 const levelToStr = { 60: 'fatal', 50: 'error', 40: 'warn', 30: 'info', 20: 'debug', 10: 'trace' };
 const strToLevel = { 'fatal': 60, 'error': 50, 'warn': 40, 'info': 30, 'debug': 20, 'trace': 10 };
-const AMORPHIC_CONTEXT = 'amorphicContext';
 
 function isObject(obj) {
     return obj != null
@@ -18,6 +17,7 @@ type LogObject = {
     msg: string;
     module?: any;
     activity?: any;
+    __amorphicContext: any;
 };
 
 export class SupertypeLogger {
@@ -73,6 +73,7 @@ export class SupertypeLogger {
             time: (new Date()).toISOString(),
             msg: '',
             level: 'info', //default info
+            __amorphicContext: {}
         };
 
         const amorphicContext = {};
@@ -83,14 +84,13 @@ export class SupertypeLogger {
         }
 
         obj.level = level;
+        obj.__amorphicContext = amorphicContext;
 
         data.forEach((arg, index) => {
             if (index === 0 && isObject(arg)) {
                 for (const proper in arg) {
                     obj[proper] = arg[proper];
                 }
-
-                arg[AMORPHIC_CONTEXT] = amorphicContext;
             }
             else {
                 msg += `${arg} `;
