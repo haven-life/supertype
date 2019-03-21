@@ -1,3 +1,5 @@
+## 3.2.0
+* Adding Stats D Client as interface in Supertype, so that you can provide your own. There are provided getters and setters
 ## 3.1.1
 * Making sure logging method can be customized
 ## 3.1.0

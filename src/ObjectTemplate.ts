@@ -1,5 +1,7 @@
 import * as serializer from './serializer';
 import { SupertypeLogger } from './SupertypeLogger';
+import { StatsDClient } from './StatsDClient';
+import { amorphicStatic } from '../dist';
 export type CreateTypeForName = {
     name?: string;
     toClient?: boolean;
@@ -107,6 +109,7 @@ export class ObjectTemplate {
     static isLocalRuleSet: any;
     static nextId: any; // for stashObject
     static __exceptions__: any;
+    static __statsClient: StatsDClient | undefined;
 
     static __templates__: ConstructorType[];
     static toServerRuleSet: string[];
@@ -121,8 +124,34 @@ export class ObjectTemplate {
     static __templateUsage__: any;
     static __injections__: Function[];
     static __toClient__: boolean;
-
     static amorphicStatic = ObjectTemplate;
+
+
+    /**
+     * Gets the statsDClient
+     * 
+     * The statsDClient may be on the amorphic object, but it will always 
+     * redirect instead to the statsReference on amorphicStatic
+     * 
+     * @static
+     * @type {(StatsDClient | undefined)}
+     * @memberof ObjectTemplate
+     */
+    static get statsDClient(): StatsDClient | undefined {
+        return this.amorphicStatic.__statsClient;
+    }
+
+    /**
+     * Sets the statsDClient reference on amorphicStatic
+     * 
+     * @static
+     * @type {(StatsDClient | undefined)}
+     * @memberof ObjectTemplate
+     */
+    static set statsDClient(statsClient: StatsDClient) {
+        this.amorphicStatic.__statsClient = statsClient;
+    }
+
     /**
      * Purpose unknown
      */
