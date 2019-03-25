@@ -35,3 +35,4 @@ export {SupertypeLogger} from './SupertypeLogger';
 export {Supertype} from './Supertype';
 export {supertypeClass, property, remote} from './decorators';
 export {StatsDClient} from './StatsDClient';
+export {StatsDHelper} from './StatsDHelper';
