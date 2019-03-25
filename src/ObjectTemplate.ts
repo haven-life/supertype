@@ -1,7 +1,6 @@
 import * as serializer from './serializer';
 import { SupertypeLogger } from './SupertypeLogger';
 import { StatsDClient } from './StatsDClient';
-import { amorphicStatic } from '../dist';
 export type CreateTypeForName = {
     name?: string;
     toClient?: boolean;

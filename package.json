@@ -12,7 +12,7 @@
     "devDependencies": {
         "@types/chai": "^3.4.34",
         "@types/mocha": "^2.2.39",
-        "@types/node": "^7.10.5",
+        "@types/node": "^11.11.6",
         "chai": "*",
         "eslint": "3.7.x",
         "istanbul": "0.4.5",
