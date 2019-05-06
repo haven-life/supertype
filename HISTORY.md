@@ -1,3 +1,5 @@
+## 3.2.0
+* Adding a statsd client property on base object template.
 ## 3.1.0
 * Adding a public api to allow customization of supertype's logging functionality.
 ## 3.0.0
