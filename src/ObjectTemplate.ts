@@ -176,7 +176,7 @@ export class ObjectTemplate {
         this.__dictionary__ = {};
         this.__anonymousId__ = 1;
         this.__templatesToInject__ = {};
-        this.logger = this.createLogger(); // Create a default logger
+        this.logger = this.logger || this.createLogger(); // Create a default logger
     }
 
     static getTemplateByName(name) {
@@ -523,7 +523,7 @@ export class ObjectTemplate {
      * Overridden by other Type Systems to inject other elements
      *
      * @param {_template} _template - the object to be passed during creation time
-     * 
+     *
      * @private
      * */
     static _injectIntoTemplate(_template) { };
@@ -901,7 +901,7 @@ export class ObjectTemplate {
     }
 
     /**
-     * 
+     *
      * General function to create templates used by create, extend and mixin
      *
      * @param {unknown} mixinTemplate - template used for a mixin
@@ -1083,7 +1083,7 @@ export class ObjectTemplate {
     static createLogger(): SupertypeLogger {
         return new SupertypeLogger();
     }
-    
+
 
 }
 
