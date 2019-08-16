@@ -1,66 +1,9 @@
-import {expect} from 'chai';
-import * as mocha from 'mocha';
-import {property, Supertype, supertypeClass} from "../../dist/index";
-
-@supertypeClass
-class Main extends Supertype {
-
-    @property()
-    name: String = '';
-    constructor (name) {
-        super();
-        this.name = name;
-    }
-    @property({getType: () => {return SubOne}})
-    subA: SubOne;
-    @property({getType: () => {return SubOne}})
-    subB: SubOne;
-    @property({getType: () => {return SubMany}})
-    subsA: Array<SubMany> = [];
-    @property({getType: () => {return SubMany}})
-    subsB: Array<SubMany> = [];
-    addSubManyA (subMany) {
-        subMany.main = this;
-        this.subsA.push(subMany);
-    }
-    addSubManyB (subMany) {
-        subMany.main = this;
-        this.subsB.push(subMany);
-    }
-};
-@supertypeClass
-class SubOne extends Supertype {
-    @property()
-    name: String = '';
-    constructor (name) {
-        super();
-        this.name = name;
-    }
-};
-@supertypeClass
-class SubOneExtended extends SubOne {
-    constructor (name) {
-        super(name);
-    }
-};
-@supertypeClass
-class SubMany extends Supertype {
-    @property()
-    main: Main;
-    @property()
-    name: String = '';
-    constructor (name) {
-        super();
-        this.name = name;
-    }
-};
-@supertypeClass
-class SubManyExtended  extends SubMany {
-    constructor (name) {
-        super(name);
-    }
-};
-
+import { expect } from 'chai';
+import { SubOne } from './model/SubOne';
+import { SubMany } from './model/SubMany';
+import { Main } from './model/Main';
+import { SubOneExtended } from './model/SubOneExtended';
+import { SubManyExtended } from './model/SubManyExtended';
 
 var main = new Main('main');
 main.subA = new SubOne('mainOneA');
@@ -73,19 +16,17 @@ main.addSubManyB(new SubManyExtended('mainManyExtendedB'));
 main.amorphic.getClasses();
 
 it('can clone', function () {
-    var relationship;
-    var calledForTopLeve = false;
     var main2 = main.createCopy(function (obj, prop, template) {
         console.log(template.__name__);
         switch (template.__name__) {
-        case 'Main':
-            return null; // Clone normally
+            case 'Main':
+                return null; // Clone normally
         }
         switch (obj.__template__.__name__ + '.' + prop) {
-        case 'Main.subA':
-            return undefined;  // Don't clone
-        case 'Main.subsA':
-            return undefined;	// Don't clone
+            case 'Main.subA':
+                return undefined;  // Don't clone
+            case 'Main.subsA':
+                return undefined;	// Don't clone
         }
         return null;    // normal create process
     });

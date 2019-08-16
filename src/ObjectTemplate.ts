@@ -91,7 +91,7 @@ function pruneExisting(obj, props) {
     var newProps = {};
 
     for (var prop in props) {
-        if (typeof(obj[prop]) === 'undefined') {
+        if (typeof (obj[prop]) === 'undefined') {
             newProps[prop] = props[prop];
         }
     }
@@ -488,8 +488,8 @@ export class ObjectTemplate {
         return this.__dictionary__;
 
         function constructorName(constructor) {
-            const namedFunction = constructor.toString().match(/function ([^(]*)/);
-            return namedFunction ? namedFunction[1] : null;
+            var namedFunction = constructor.toString().match(/function ([^(]*)/);
+            return constructor.name ? constructor.name : namedFunction ? namedFunction[1] : null;
         }
 
     }
@@ -738,26 +738,26 @@ export class ObjectTemplate {
      */
     static toJSONString = serializer.toJSONString;
 
-         /**
-     /**
-      * Find the right subclass to instantiate by either looking at the
-      * declared list in the subClasses define property or walking through
-      * the subclasses of the declared template
-      *
-      * @param {unknown} template unknown
-      * @param {unknown} objId unknown
-      * @param {unknown} defineProperty unknown
-      * @returns {*}
-      * @private
-      */
-     static _resolveSubClass(template, objId, defineProperty) {
+    /**
+/**
+ * Find the right subclass to instantiate by either looking at the
+ * declared list in the subClasses define property or walking through
+ * the subclasses of the declared template
+ *
+ * @param {unknown} template unknown
+ * @param {unknown} objId unknown
+ * @param {unknown} defineProperty unknown
+ * @returns {*}
+ * @private
+ */
+    static _resolveSubClass(template, objId, defineProperty) {
         let templateName = '';
 
         if (objId.match(/-([A-Za-z0-9_:]*)-/)) {
             templateName = RegExp.$1;
         }
 
-    // Resolve template subclass for polymorphic instantiation
+        // Resolve template subclass for polymorphic instantiation
         if (defineProperty && defineProperty.subClasses && objId != 'anonymous)') {
             if (templateName) {
                 for (let ix = 0; ix < defineProperty.subClasses.length; ++ix) {
@@ -819,18 +819,18 @@ export class ObjectTemplate {
         return template;
     }
 
-         /**
-      * An overridable function used to create an object from a template and optionally
-      * manage the caching of that object (used by derivative type systems).  It
-      * preserves the original id of an object
-      *
-      * @param {unknown} template of object
-      * @param {unknown} objId and id (if present)
-      * @param {unknown} defineProperty unknown
-      * @returns {*}
-      * @private
-      */
-     static _createEmptyObject(template, objId, defineProperty) {
+    /**
+ * An overridable function used to create an object from a template and optionally
+ * manage the caching of that object (used by derivative type systems).  It
+ * preserves the original id of an object
+ *
+ * @param {unknown} template of object
+ * @param {unknown} objId and id (if present)
+ * @param {unknown} defineProperty unknown
+ * @returns {*}
+ * @private
+ */
+    static _createEmptyObject(template, objId, defineProperty) {
         template = this._resolveSubClass(template, objId, defineProperty);
 
         const oldStashObject = this._stashObject;
@@ -918,12 +918,13 @@ export class ObjectTemplate {
         // We will return a constructor that can be used in a new function
         // that will call an init() function found in properties, define properties using Object.defineProperties
         // and make copies of those that are really objects
-        var functionProperties:any = {};    // Will be populated with init function from properties
+        var functionProperties: any = {};    // Will be populated with init function from properties
         var objectProperties = {};    // List of properties to be processed by hand
         var defineProperties = {};    // List of properties to be sent to Object.defineProperties()
         var objectTemplate = this;
         var templatePrototype;
 
+        console.log(arguments);
         function F() { }     // Used in case of extend
 
         if (!this.lazyTemplateLoad) {
@@ -1102,7 +1103,7 @@ function createPropertyFunc(functionProperties, templatePrototype, objectTemplat
         var defineProperty = null; // defineProperty to be added to defineProperties
 
         // Determine the property value which may be a defineProperties structure or just an initial value
-        var descriptor:any = {};
+        var descriptor: any = {};
 
         if (properties) {
             descriptor = Object.getOwnPropertyDescriptor(properties, propertyName);

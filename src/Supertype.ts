@@ -1,9 +1,9 @@
-import {ObjectTemplate} from './ObjectTemplate';
+import { ObjectTemplate } from './ObjectTemplate';
 import * as serializer from './serializer';
 
 function constructorName(constructor) {
     var namedFunction = constructor.toString().match(/function ([^(]*)/);
-    return namedFunction ? namedFunction[1] : null;
+    return constructor.name ? constructor.name : namedFunction ? namedFunction[1] : null;
 }
 
 export type Constructable = new (...args: any[]) => {};
@@ -18,13 +18,13 @@ export type Constructable = new (...args: any[]) => {};
 
 export class Supertype {
     __template__: any;
-    amorphic : typeof ObjectTemplate;
+    amorphic: typeof ObjectTemplate;
 
     static amorphicCreateProperty(prop: String, defineProperty: Object) {
         // Implemented in the decorator @supertypeClass
     }
 
-    static amorphicGetProperties(includeVirtualProperties?: boolean):any {
+    static amorphicGetProperties(includeVirtualProperties?: boolean): any {
         // Implemented in the decorator @supertypeClass
     }
     static amorphicFromJSON(json: string) {
@@ -36,24 +36,24 @@ export class Supertype {
     static getProperties() {
         // Implemented in the decorator @supertypeClass
     }
-    amorphicGetClassName () : string {
+    amorphicGetClassName(): string {
         // Implemented in the decorator @supertypeClass
         return '';
     }
-    static fromJSON (json: string, idPrefix?: string) {
+    static fromJSON(json: string, idPrefix?: string) {
         // Implemented in the decorator @supertypeClass
-    
+
     }
 
-    static inject (injector: any) {
+    static inject(injector: any) {
         // Implemented in Line 128, of ObjectTemplate.ts (static performInjections)
     }
 
     static amorphicProperties: any;
     static amorphicChildClasses: Array<Constructable>;
     static amorphicParentClass: Constructable;
-    static amorphicClassName : string;
-    static amorphicStatic : typeof ObjectTemplate;
+    static amorphicClassName: string;
+    static amorphicStatic: typeof ObjectTemplate;
 
     // Object members
     __id__: String;
@@ -62,7 +62,7 @@ export class Supertype {
     // Deprecated legacy naming
     static __children__: Array<Constructable>;
     static __parent__: Constructable;
-    amorphicClass : any
+    amorphicClass: any
 
     constructor(objectTemplate = ObjectTemplate) {
         var template = this.__template__;
@@ -93,28 +93,28 @@ export class Supertype {
         // https://github.com/haven-life/supertype/issues/7
         return this;
     }
-    amorphicToJSON(cb?){
+    amorphicToJSON(cb?) {
         return serializer.toJSONString(this, cb);
-    } 
+    }
 
     amorphicGetPropertyDefinition(prop) {
         return ObjectTemplate._getDefineProperty(prop, this.__template__);
     }
     amorphicGetPropertyValues(prop) {
         var defineProperty = this.__prop__(prop) || this.__prop__('_' + prop);
-    
-        if (typeof(defineProperty.values) === 'function') {
+
+        if (typeof (defineProperty.values) === 'function') {
             return defineProperty.values.call(this);
         }
         return defineProperty.values;
     }
     amorphicGetPropertyDescriptions(prop) {
         var defineProperty = this.__prop__(prop) || this.__prop__('_' + prop);
-    
-        if (typeof(defineProperty.descriptions) === 'function') {
+
+        if (typeof (defineProperty.descriptions) === 'function') {
             return defineProperty.descriptions.call(this);
         }
-    
+
         return defineProperty.descriptions;
     }
 
@@ -138,7 +138,7 @@ export class Supertype {
     __values__(prop) {
         return this.amorphicGetPropertyValues(prop);
     }
-    __descriptions__(prop){
+    __descriptions__(prop) {
         return this.amorphicGetPropertyDescriptions(prop);
     }
     toJSONString(cb?) {

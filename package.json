@@ -1,48 +1,50 @@
 {
-    "name": "@havenlife/supertype",
-    "description": "A type system for classical inheritence, mix-ins and composition.",
-    "version": "3.3.0",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "homepage": "https://github.com/haven-life/supertype",
-    "dependencies": {
-        "@types/reflect-metadata": "^0.1.0",
-        "reflect-metadata": "^0.1.12"
-    },
-    "devDependencies": {
-        "@types/chai": "^3.4.34",
-        "@types/mocha": "^2.2.39",
-        "@types/node": "^11.11.6",
-        "chai": "*",
-        "eslint": "3.7.x",
-        "istanbul": "0.4.5",
-        "mocha": "5.2.0",
-        "sinon": "1.15.x",
-        "ts-node": "*",
-        "typescript": "2.9.2"
-    },
-    "scripts": {
-        "lint": "eslint .",
-        "debug:tests": "mocha --inspect-brk test/animals.js",
-        "debug:tstests": "mocha --inspect-brk test/typescript/*.js",
-        "test:ts": "mocha --compilers ts:ts-node/register,tsx:ts-node/register test/typescript/*",
-        "clean": "rm -rf dist/",
-        "compile": "tsc",
-        "test": "mocha test/**/*.js dist/test/**/*.js",
-        "test:config": "mocha test/config",
-        "test:example": "mocha test/example",
-        "prepublishOnly": "npm run clean && npm run compile"
-    },
-    "directories": {},
-    "engines": {
-        "node": ">=0.8.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/haven-life/supertype.git"
-    },
-    "bugs": {
-        "url": "http://github.com/haven-life/supertype/issues"
-    },
-    "optionalDependencies": {}
+	"name": "@havenlife/supertype",
+	"description": "A type system for classical inheritence, mix-ins and composition.",
+	"version": "3.3.0",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"homepage": "https://github.com/haven-life/supertype",
+	"dependencies": {
+		"@types/reflect-metadata": "^0.1.0",
+		"reflect-metadata": "^0.1.12"
+	},
+	"devDependencies": {
+		"@types/chai": "^3.4.34",
+		"@types/mocha": "^2.2.39",
+		"@types/node": "^11.11.6",
+		"chai": "*",
+		"eslint": "3.7.x",
+		"istanbul": "0.4.5",
+		"mocha": "5.2.0",
+		"sinon": "1.15.x",
+		"ts-node": "*",
+		"typescript": "2.9.2"
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"debug:tests": "mocha --inspect-brk test/animals.js",
+		"debug:tstests": "mocha --inspect-brk test/typescript/*.js",
+		"test:ts": "TS_NODE_PROJECT=test/typescript/tsconfig.json mocha --require ts-node/register \"test/typescript/index.ts\"",
+		"clean": "rm -rf dist/",
+		"compile": "tsc",
+		"compileTests": "tsc -p test/typescript/tsconfig.json",
+		"runtsjs": "mocha test/typescript/**/animal.js test/typescript/**/clone.js",
+		"test": "mocha test/**/*.js dist/test/**/*.js",
+		"test:config": "mocha test/config",
+		"test:example": "mocha test/example",
+		"prepublishOnly": "npm run clean && npm run compile"
+	},
+	"directories": {},
+	"engines": {
+		"node": ">=0.8.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/haven-life/supertype.git"
+	},
+	"bugs": {
+		"url": "http://github.com/haven-life/supertype/issues"
+	},
+	"optionalDependencies": {}
 }

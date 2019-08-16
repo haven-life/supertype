@@ -122,7 +122,8 @@ export function supertypeClass(objectProps?, objectTemplate?): any {
             return target.prototype.__amorphicprops__;
         }
         function getName() {
-            return target.toString().match(/function ([^(]*)/)[1];
+            // es6 name
+            return target.name || target.toString().match(/function ([^(]*)/)[1];
         }
         function getDictionary() {
             objectTemplate.getClasses();
@@ -147,13 +148,13 @@ export function property(props?): any {
         var reflectionType = Reflect.getMetadata('design:type', target, targetKey);
         var declaredType = props.type;
         var type = reflectionType !== Array ? declaredType || reflectionType : declaredType;
-    // Type mismatches
+        // Type mismatches
         if (declaredType && reflectionType && reflectionType !== Array) {
             target.__exceptions__ = target.__exceptions__ || {};
             target.__exceptions__[targetKey] = function (className, prop) {
                 return className + '.' + prop + ' - decorator type does not match actual type';
             };
-    // Deferred type
+            // Deferred type
         }
         else if (typeof props.getType === 'function') {
             target.__deferredType__ = target.hasOwnProperty('__deferredType__') ? target.__deferredType__ : {};
@@ -164,8 +165,8 @@ export function property(props?): any {
             target.__exceptions__ = target.__exceptions__ || {};
             target.__exceptions__[targetKey] = function (className, prop) {
                 return className + '.' + prop +
-                ' - type is undefined. Circular reference? Try @property({getType: () => {return ' +
-                prop[0].toUpperCase() + prop.substr(1) + '}})';
+                    ' - type is undefined. Circular reference? Try @property({getType: () => {return ' +
+                    prop[0].toUpperCase() + prop.substr(1) + '}})';
 
             };
         }
